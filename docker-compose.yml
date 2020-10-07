@@ -1,0 +1,31 @@
+version: "3"
+services:
+  app:
+    container_name: mydog-api-app
+    build: .
+    tty: true
+    volumes:
+      - .:/go/src/mydog-api-app
+    ports:
+      - "8080:8080"
+    environment:
+      MONGO_DB_HOST: mongo-db
+      MONGO_DB_PORT: 27017
+    links:
+      - "mongo-db:mongo-db"
+  mongo-db:
+    container_name: mydog-api-mongo
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_USER: root
+      MONGODB_PASSWORD: root
+  minio:
+    container_name: mydog-api-minio
+    image: minio/minio
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: access_key
+      MINIO_SECRET_KEY: secret_key
