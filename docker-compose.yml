@@ -2,12 +2,14 @@ version: "3"
 services:
   app:
     container_name: mydog-api-app
-    build: .
+    build:
+      context: .
+      dockerfile: ./go/Dockerfile
     tty: true
     volumes:
-      - .:/go/src/mydog-api-app
+      - ./backend:/go/backend/mydog-api-app
     ports:
-      - "8080:8080"
+      - "9000:9000"
     environment:
       MONGO_DB_HOST: mongo-db
       MONGO_DB_PORT: 27017
@@ -25,7 +27,17 @@ services:
     container_name: mydog-api-minio
     image: minio/minio
     ports:
-      - "9000:9000"
+      - "9001:9001"
     environment:
       MINIO_ACCESS_KEY: access_key
       MINIO_SECRET_KEY: secret_key
+  vue:
+    container_name: mydog-api-front
+    build: ./vue
+    stdin_open: true
+    tty: true
+    command: /bin/sh
+    volumes:
+      - ./frontend:/src
+    ports:
+      - "8080:8080"
