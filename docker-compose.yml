@@ -33,7 +33,9 @@ services:
       MINIO_SECRET_KEY: secret_key
   vue:
     container_name: mydog-api-front
-    build: ./vue
+    build:
+      context: .
+      dockerfile: ./vue/Dockerfile
     stdin_open: true
     tty: true
     command: /bin/sh
