@@ -7,7 +7,7 @@ services:
       dockerfile: ./go/Dockerfile
     tty: true
     volumes:
-      - ./backend:/go/backend/mydog-api-app
+      - ./backend:/go/src/mydog-api-app
     ports:
       - "9000:9000"
     environment:
@@ -31,6 +31,7 @@ services:
     environment:
       MINIO_ACCESS_KEY: access_key
       MINIO_SECRET_KEY: secret_key
+    command: server /export
   vue:
     container_name: mydog-api-front
     build:
