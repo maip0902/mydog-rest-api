@@ -2,6 +2,8 @@
 <div>hello</div>
   <input type="text" name="code" v-model="code">
   <button @click="getImage">Get Image!</button>
+  
+  <img :src="imageUrl">
 </template>
 
 <script>
@@ -11,14 +13,17 @@ export default {
   name: "StatusImage",
   data () {
     return {
-      code: ""
+      code: "",
+      imageUrl: ""
     }
   },
   methods: {
     getImage() {
-      console.log(this.code)
-      axios.get("http://localhost:9000/code/" + this.code)
-          .then(res => (console.log(res.data)))
+      axios.get("http://localhost:3000/code/" + this.code)
+          .then(res => (
+              console.log(res.data.Image),
+              this.imageUrl = require('@/assets/' + res.data.Image + '.jpeg')
+          ))
           .catch(err => console.log(err))
     }
   }

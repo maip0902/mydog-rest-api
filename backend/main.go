@@ -11,11 +11,6 @@ import (
     "strconv"
     "github.com/joho/godotenv"
     "os"
-    "github.com/aws/aws-sdk-go/aws"
-    "github.com/aws/aws-sdk-go/aws/session"
-    "github.com/aws/aws-sdk-go/service/s3"
-    "github.com/aws/aws-sdk-go/aws/credentials"
-    "time"
 )
 
 var db *mgo.Database
@@ -26,8 +21,6 @@ func main() {
         log.Fatal("Error loading .env file")
     }
     ConnectDB()
-
-    CreatePreSignedUrl("")
     api := rest.NewApi()
     api.Use(rest.DefaultDevStack...)
     router, err := rest.MakeRouter(
@@ -67,33 +60,34 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
-    CreatePreSignedUrl("")
 //     url := CreatePreSignedUrl(&codeImage.Image)
 //     &codeImage.Image = url
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
 }
 
-func CreatePreSignedUrl(u string) {
-    s, err := session.NewSession()
-
-    ak := "access_key"
-    sk := "secret_key"
-    cfg := aws.Config{
-        Credentials: credentials.NewStaticCredentials(ak, sk, ""),
-        Region: aws.String("ap-northeast-1"),
-        Endpoint: aws.String("http://127.0.0.1:9001"),
-    }
-    svc := s3.New(s, &cfg)
-    req, _ := svc.GetObjectRequest(&s3.GetObjectInput{
-        Bucket: aws.String("code"),
-        Key:    aws.String("404.jpeg"),
-    })
-    urlStr, err := req.Presign(15 * time.Minute)
-    fmt.Printf("%v", urlStr)
-    if err != nil {
-        fmt.Println("取得失敗")
-    }
-    fmt.Println("取得成功")
-    fmt.Println("%v", urlStr)
-}
+// func CreatePreSignedUrl(ci *CodeImage) *CodeImage {
+//     s, err := session.NewSession()
+//
+//     ak := "access_key"
+//     sk := "secret_key"
+//     cfg := aws.Config{
+//         Credentials: credentials.NewStaticCredentials(ak, sk, ""),
+//         Region: aws.String("ap-northeast-1"),
+//         Endpoint: aws.String("http://127.0.0.1:9000"),
+//     }
+//     svc := s3.New(s, &cfg)
+//     req, _ := svc.GetObjectRequest(&s3.GetObjectInput{
+//         Bucket: aws.String("code"),
+//         Key:    aws.String("404.jpeg"),
+//     })
+//     urlStr, err := req.Presign(15 * time.Minute)
+//     fmt.Printf("%v", urlStr)
+//     if err != nil {
+//         fmt.Println("取得失敗")
+//     }
+//     fmt.Println("取得成功")
+//     fmt.Println("%v", urlStr)
+//     ci.Image = urlStr
+//     return ci
+// }
