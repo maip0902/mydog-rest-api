@@ -32,6 +32,22 @@ services:
       MINIO_ACCESS_KEY: access_key
       MINIO_SECRET_KEY: secret_key
     command: server /export
+    depends_on:
+      - create-bucket
+  create-bucket:
+    container_name: mydog-api-minio-mc
+    image: minio/mc
+    entrypoint: [""]
+    command:
+      - /bin/sh
+      - -c
+      - |
+        until (mc config host add minio http://minio:9000 access_key secret_key) do echo '...wait until add host' && sleep 1; done;
+        mc mb minio/code-image
+        mc policy code-image
+    environment:
+      MINIO_ACCESS_KEY: access_key
+      MINIO_SECRET_KEY: secret_key
   vue:
     container_name: mydog-api-front
     build:
