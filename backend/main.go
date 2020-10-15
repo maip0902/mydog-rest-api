@@ -3,9 +3,8 @@ package main
 import (
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/globalsign/mgo"
-    "github.com/maip0902/mydog-rest-api/backend/mongo"
+    "github.com/maip0902/mydog-rest-api/mongo"
     "net/http"
-    "fmt"
     "log"
     "github.com/globalsign/mgo/bson"
     "sync"
@@ -21,8 +20,8 @@ func main() {
     if err != nil {
         log.Fatal("Error loading .env file")
     }
-//     ConnectDB()
-    mongo.ConnectDB()
+
+    db = mongo.ConnectDB()
     api := rest.NewApi()
     api.Use(rest.DefaultDevStack...)
     router, err := rest.MakeRouter(
@@ -33,13 +32,6 @@ func main() {
     }
     api.SetApp(router)
    	log.Fatal(http.ListenAndServe(":" + os.Getenv("DEFAULT_PORT"), api.MakeHandler()))
-}
-
-func ConnectDB() {
-    session, _ := mgo.Dial(os.Getenv("DB_HOST") + ":" + os.Getenv("DB_PORT"))
-    session.SetMode(mgo.Monotonic, true)
-    db = session.DB(os.Getenv("DB_NAME"))
-    fmt.Println("DB connect start")
 }
 
 type CodeImage struct {
@@ -64,34 +56,7 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
-//     url := CreatePreSignedUrl(&codeImage.Image)
-//     &codeImage.Image = url
+
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
 }
-
-// func CreatePreSignedUrl(ci *CodeImage) *CodeImage {
-//     s, err := session.NewSession()
-//
-//     ak := "access_key"
-//     sk := "secret_key"
-//     cfg := aws.Config{
-//         Credentials: credentials.NewStaticCredentials(ak, sk, ""),
-//         Region: aws.String("ap-northeast-1"),
-//         Endpoint: aws.String("http://127.0.0.1:9000"),
-//     }
-//     svc := s3.New(s, &cfg)
-//     req, _ := svc.GetObjectRequest(&s3.GetObjectInput{
-//         Bucket: aws.String("code"),
-//         Key:    aws.String("404.jpeg"),
-//     })
-//     urlStr, err := req.Presign(15 * time.Minute)
-//     fmt.Printf("%v", urlStr)
-//     if err != nil {
-//         fmt.Println("取得失敗")
-//     }
-//     fmt.Println("取得成功")
-//     fmt.Println("%v", urlStr)
-//     ci.Image = urlStr
-//     return ci
-// }
