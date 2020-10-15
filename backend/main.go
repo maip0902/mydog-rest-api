@@ -3,6 +3,7 @@ package main
 import (
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/globalsign/mgo"
+    "github.com/maip0902/mydog-rest-api/backend/mongo"
     "net/http"
     "fmt"
     "log"
@@ -20,7 +21,8 @@ func main() {
     if err != nil {
         log.Fatal("Error loading .env file")
     }
-    ConnectDB()
+//     ConnectDB()
+    mongo.ConnectDB()
     api := rest.NewApi()
     api.Use(rest.DefaultDevStack...)
     router, err := rest.MakeRouter(
@@ -51,6 +53,8 @@ var lock = sync.RWMutex{}
 
 func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
     code, _ := strconv.Atoi(r.PathParam("code"))
+
+    w.Header().Set("Access-Control-Allow-Origin", "*")
 
     // 読み込みlock RLock同士はブロックしない
     lock.RLock()
