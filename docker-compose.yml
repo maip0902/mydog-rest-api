@@ -23,6 +23,11 @@ services:
     environment:
       MONGODB_USER: root
       MONGODB_PASSWORD: root
+  mongo-seed:
+    container_name: mydog-api-mongo-seed
+    build: ./mongo-seed
+    links:
+      - mongo-db
   minio:
     container_name: mydog-api-minio
     image: minio/minio

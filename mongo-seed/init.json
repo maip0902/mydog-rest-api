@@ -1,0 +1,10 @@
+[
+  {
+    "code": 404,
+    "image": "code-image/404.jpeg"
+  },
+  {
+    "code": 500,
+    "image": "code-image/500.jpeg"
+  }
+]
