@@ -1,5 +1,8 @@
 version: "3"
 services:
+  proxy-app:
+    container_name: mydog-api-proxy-app
+    build: ./nginx
   app:
     container_name: mydog-api-app
     build:
