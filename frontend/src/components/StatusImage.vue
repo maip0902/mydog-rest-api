@@ -22,7 +22,8 @@ export default {
       axios.get("http://localhost:3000/code/" + this.code)
           .then(res => (
               console.log(res.data.Image),
-              this.imageUrl = require('@/assets/' + res.data.Image + '.jpeg')
+              this.imageUrl = "http://localhost:9000/minio/" + res.data.Image
+
           ))
           .catch(err => console.log(err))
     }

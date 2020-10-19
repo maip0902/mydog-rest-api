@@ -26,6 +26,7 @@ func main() {
     api.Use(rest.DefaultDevStack...)
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", GetImageByCode),
+        rest.Get("/code", GetAll),
     )
     if err != nil {
         log.Fatal(err)
@@ -35,9 +36,10 @@ func main() {
 }
 
 type CodeImage struct {
-    ID bson.ObjectId `bson:"_id"`
-    Code  int        `bson:"code"`
-    Image string     `bson:"image"`
+    ID bson.ObjectId   `bson:"_id"`
+    Code  int          `bson:"code"`
+    Image string       `bson:"image"`
+    Description string `bson:"description"`
 }
 
 // 読み込みと書き込みの競合解決
@@ -59,4 +61,20 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
 
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
+}
+
+func GetAll (w rest.ResponseWriter, r *rest.Request) {
+    w.Header().Set("Access-Control-Allow-Origin", "*")
+
+    var codeImages []*CodeImage
+    // 読み込みlock RLock同士はブロックしない
+    lock.RLock()
+    if err := db.C("codeImage").Find(nil).All(&codeImages); err != nil {
+        rest.NotFound(w, r)
+        return
+    }
+    lock.RUnlock()
+
+    // HttpResponseにjson文字列を出力
+    w.WriteJson(codeImages)
 }

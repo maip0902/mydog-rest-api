@@ -2,14 +2,17 @@
 <!--  <img alt="Vue logo" src="./assets/logo.png">-->
 <!--  <HelloWorld msg="Welcome to Your Vue.js App"/>-->
   <StatusImage/>
+  <StatusImageList/>
 </template>
 
 <script>
 import StatusImage from './components/StatusImage.vue'
+import StatusImageList from "@/components/StatusImageList";
 
 export default {
   name: 'App',
   components: {
+    StatusImageList,
     StatusImage
   }
 }
