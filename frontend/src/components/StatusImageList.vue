@@ -1,9 +1,9 @@
 <template>
 <div>Code List</div>
-  <ul>Code List</ul>
-  <li v-for="codeImage in codeImages" v-bind:key="codeImage.id">
-    {{ codeImage.Description }}
-  </li>
+  <div v-for="codeImage in codeImages" v-bind:key="codeImage.id">
+    <dt>{{ codeImage.Code }}</dt>
+    <dd>{{ codeImage.Description }}</dd>
+  </div>
 </template>
 
 <script>

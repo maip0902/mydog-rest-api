@@ -1,10 +1,12 @@
 [
   {
     "code": 404,
-    "image": "code-image/404.jpeg"
+    "image": "code-image/404.jpeg",
+    "description": "Not Found"
   },
   {
     "code": 500,
-    "image": "code-image/500.jpeg"
+    "image": "code-image/500.jpeg",
+    "description": "Internal Server Error"
   }
 ]

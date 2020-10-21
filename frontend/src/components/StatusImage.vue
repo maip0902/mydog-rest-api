@@ -2,8 +2,10 @@
 <div>hello</div>
   <input type="text" name="code" v-model="code">
   <button @click="getImage">Get Image!</button>
-  
-  <img :src="imageUrl">
+  <div>
+    <div>{{ description }}</div>
+    <img :src="imageUrl">
+  </div>
 </template>
 
 <script>
@@ -14,7 +16,8 @@ export default {
   data () {
     return {
       code: "",
-      imageUrl: ""
+      imageUrl: "",
+      description: ""
     }
   },
   methods: {
@@ -22,7 +25,8 @@ export default {
       axios.get("http://localhost:3000/code/" + this.code)
           .then(res => (
               console.log(res.data.Image),
-              this.imageUrl = "http://localhost:9000/minio/" + res.data.Image
+              this.imageUrl = "http://localhost:9000/minio/" + res.data.Image,
+              this.description = res.data.Description
 
           ))
           .catch(err => console.log(err))
