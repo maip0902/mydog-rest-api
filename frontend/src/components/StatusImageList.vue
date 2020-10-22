@@ -1,31 +1,34 @@
 <template>
-<div>Code List</div>
-  <div v-for="codeImage in codeImages" v-bind:key="codeImage.id">
-    <dt>{{ codeImage.Code }}</dt>
-    <dd>{{ codeImage.Description }}</dd>
+  <div>
+    Code List
+    <div v-for="codeImage in codeImages" v-bind:key="codeImage.id">
+      <dt>{{ codeImage.Code }}</dt>
+      <dd>{{ codeImage.Description }}</dd>
+    </div>
   </div>
+
 </template>
 
 <script>
 import axios from 'axios'
 
 export default {
-  name: "StatusImageList",
-  data() {
+  name: 'StatusImageList',
+  data () {
     return {
       codeImages: []
     }
   },
-  created() {
+  created () {
     this.getCode()
   },
   methods: {
-    getCode() {
-      axios.get("http://localhost:3000/code")
-          .then(res => (
-            this.codeImages = res.data,
-                console.log(res.data)
-          ))
+    getCode () {
+      axios.get('http://localhost:3000/code')
+        .then(res => {
+          console.log(res.data)
+          this.codeImages = res.data
+        })
     }
   }
 }
