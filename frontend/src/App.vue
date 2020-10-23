@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <div>
+      <button>
+        <router-link to="/login">Admin</router-link>
+      </button>
+    </div>
     <div id="nav">
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
