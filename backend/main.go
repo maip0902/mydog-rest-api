@@ -4,6 +4,7 @@ import (
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/globalsign/mgo"
     "github.com/maip0902/mydog-rest-api/mongo"
+    "github.com/maip0902/mydog-rest-api/auth"
     "net/http"
     "log"
     "github.com/globalsign/mgo/bson"
@@ -27,6 +28,7 @@ func main() {
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", GetImageByCode),
         rest.Get("/code", GetAll),
+        rest.Post("/signUp", auth.SignUp),
     )
     if err != nil {
         log.Fatal(err)

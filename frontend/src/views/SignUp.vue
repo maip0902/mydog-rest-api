@@ -22,7 +22,7 @@ export default {
   },
   methods: {
     signup() {
-      axios.post("/signup", {"email": this.email, "password": this.password})
+      axios.post("http://localhost:3000/signUp", {"email": this.email, "password": this.password})
         .then( res => {
           console.log(res.data)
         })

@@ -1,18 +1,14 @@
-package main
+package auth
 
 import (
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/globalsign/mgo"
     "github.com/maip0902/mydog-rest-api/mongo"
-    "net/http"
-    "log"
     "github.com/globalsign/mgo/bson"
     "sync"
-    "strconv"
-    "github.com/joho/godotenv"
-    "os"
-    ”
 )
+
+var db *mgo.Database
 
 type User struct {
     ID bson.ObjectId   `bson:"_id"`
@@ -21,19 +17,22 @@ type User struct {
     password string    `bson:"password"`
 }
 
+var lock = sync.RWMutex{}
+
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
+    db = mongo.ConnectDB()
     w.Header().Set("Access-Control-Allow-Origin", "*")
 
-    email, _ := strconv.Atoi(r.PathParam("email"))
-    password, _ := strconv.Atoi(r.PathParam("password"))
+    email := r.PathParam("email")
+    password := r.PathParam("password")
 
-    email == "" {
-        rest.Error(w, "emailは必須です")
-    }
-
-    password == "" {
-        rest.Error(w, "passwordは必須です")
-    }
+//     if (email == "") {
+//         rest.Error(w, "emailは必須です", 500)
+//     }
+//
+//     if (password == "") {
+//         rest.Error(w, "passwordは必須です", 500)
+//     }
 
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"email": email, "password": password}); err != nil {
