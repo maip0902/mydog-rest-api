@@ -22,7 +22,7 @@ var lock = sync.RWMutex{}
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     w.Header().Set("Access-Control-Allow-Origin", "*")
-
+    w.Header().Set("AllowedMethods", "OPTIONS")
     email := r.PathParam("email")
     password := r.PathParam("password")
 

@@ -28,7 +28,7 @@ func main() {
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", GetImageByCode),
         rest.Get("/code", GetAll),
-        rest.Post("/signUp", auth.SignUp),
+        rest.Options("/signUp", auth.SignUp),
     )
     if err != nil {
         log.Fatal(err)
