@@ -1,11 +1,9 @@
 <template>
   <div>
     <div>Sign up</div>
-    <form method="post">
       email<input type="email" v-model="email">
       password<input type="password" v-model="password">
       <button @click="signup">register</button>
-    </form>
   </div>
 </template>
 
@@ -13,7 +11,7 @@
 import axios from 'axios'
 
 export default {
-  name: "SignIn",
+  name: "SignUp",
   data() {
     return {
       email: "",
@@ -22,9 +20,10 @@ export default {
   },
   methods: {
     signup() {
-      axios.post("http://localhost:3000/signUp", {"email": this.email, "password": this.password})
+      axios.post("http://localhost:3000/signUp", {"email": this.email, "password": this.password}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
         .then( res => {
           console.log(res.data)
+
         })
     }
   }
