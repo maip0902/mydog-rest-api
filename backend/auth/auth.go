@@ -20,9 +20,11 @@ type User struct {
 var lock = sync.RWMutex{}
 
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
-    db = mongo.ConnectDB()
     w.Header().Set("Access-Control-Allow-Origin", "*")
-    w.Header().Set("AllowedMethods", "OPTIONS")
+//     w.Header().Set("Content-Type", "application/json")
+//     w.Header().Set("Accept", "*")
+//     w.Header().Set("Access-Control-Allow-Headers","*")
+    db = mongo.ConnectDB()
     email := r.PathParam("email")
     password := r.PathParam("password")
 
@@ -40,4 +42,5 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
+
 }

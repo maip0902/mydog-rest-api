@@ -25,10 +25,22 @@ func main() {
     db = mongo.ConnectDB()
     api := rest.NewApi()
     api.Use(rest.DefaultDevStack...)
+//     api.Use(&rest.CorsMiddleware{
+//             RejectNonCorsRequests: false,
+//             OriginValidator: func(origin string, request *rest.Request) bool {
+//                 return origin == "http://localhost:8080"
+//             },
+//             AllowedMethods: []string{"GET", "POST", "PUT", "OPTIONS"},
+//             AllowedHeaders: []string{
+//                 "Accept", "Content-Type", "X-Custom-Header", "Origin"},
+//             AccessControlAllowCredentials: true,
+//             AccessControlMaxAge:           3600,
+//         })
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", GetImageByCode),
         rest.Get("/code", GetAll),
         rest.Options("/signUp", auth.SignUp),
+        rest.Post("/signUp", auth.SignUp),
     )
     if err != nil {
         log.Fatal(err)
@@ -50,7 +62,7 @@ var lock = sync.RWMutex{}
 func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
     code, _ := strconv.Atoi(r.PathParam("code"))
 
-    w.Header().Set("Access-Control-Allow-Origin", "*")
+//     w.Header().Set("Access-Control-Allow-Origin", "*")
 
     // 読み込みlock RLock同士はブロックしない
     lock.RLock()
@@ -66,7 +78,7 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
 }
 
 func GetAll (w rest.ResponseWriter, r *rest.Request) {
-    w.Header().Set("Access-Control-Allow-Origin", "*")
+//     w.Header().Set("Access-Control-Allow-Origin", "*")
 
     var codeImages []*CodeImage
     // 読み込みlock RLock同士はブロックしない
