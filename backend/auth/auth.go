@@ -6,6 +6,8 @@ import (
     "github.com/maip0902/mydog-rest-api/mongo"
     "github.com/globalsign/mgo/bson"
     "sync"
+    "fmt"
+    "golang.org/x/crypto/bcrypt"
 )
 
 var db *mgo.Database
@@ -28,6 +30,11 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     email := r.PathParam("email")
     password := r.PathParam("password")
 
+    hashPass, err := bcrypt.GenerateFromPassword([]byte(password),12)
+    if err != nil {
+        fmt.Println(err)
+    }
+
 //     if (email == "") {
 //         rest.Error(w, "emailは必須です", 500)
 //     }
@@ -37,7 +44,7 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
 //     }
 
     lock.RLock()
-    if err := db.C("users").Insert(bson.M{"email": email, "password": password}); err != nil {
+    if err := db.C("users").Insert(bson.M{"email": email, "password": string(hashPass)}); err != nil {
         rest.NotFound(w, r)
         return
     }

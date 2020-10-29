@@ -7,4 +7,5 @@ require (
 	github.com/aws/aws-sdk-go v1.35.7 // indirect
 	github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 	github.com/joho/godotenv v1.3.0
+	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 )
