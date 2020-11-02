@@ -20,7 +20,14 @@ export default {
   },
   methods: {
     signup() {
-      axios.post("http://localhost:3000/signUp", {"email": this.email, "password": this.password}, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+      // let params = new URLSearchParams();
+      // params.append("email", this.email);
+      // params.append( "password", this.password)
+      let data = JSON.stringify({
+        password: this.password,
+        email: this.email
+      })
+      axios.post("http://localhost:3000/signUp", data, {headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}})
         .then( res => {
           console.log(res.data)
 
