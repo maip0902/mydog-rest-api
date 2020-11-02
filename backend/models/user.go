@@ -4,7 +4,7 @@ import (
     "github.com/go-ozzo/ozzo-validation/v4"
     "github.com/go-ozzo/ozzo-validation/v4/is"
     "github.com/globalsign/mgo/bson"
-
+    "fmt"
 )
 
 type User struct {
@@ -15,7 +15,10 @@ type User struct {
 }
 
 func (user *User) CreateUserValidate() error {
-    return validation.Validate(&user.Email,
+
+    email := &user.Email
+    fmt.Println(*user)
+    return validation.Validate(email,
         validation.Required.Error("メールアドレスは必須です"),
         is.Email.Error("正しいメールアドレスの形で入力してください"),
     )

@@ -8,7 +8,9 @@ import (
     "github.com/globalsign/mgo/bson"
     "sync"
     "fmt"
+    "log"
     "golang.org/x/crypto/bcrypt"
+    "github.com/dgrijalva/jwt-go"
 )
 
 var db *mgo.Database
@@ -26,20 +28,39 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         fmt.Println(err)
     }
 
-    fmt.Printf("%v", email)
-    fmt.Printf("%v", password)
-
     user := &models.User{
-                Email: email,
-                Password: password,
+        Email: email,
+        Password: string(hashPass),
     }
-
     err = user.CreateUserValidate()
-    fmt.Printf("%v", err)
+//     if err != nil {
+//         fmt.Printf("%v", err)
+//         rest.NotFound(w, r)
+//         return
+//     }
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"email": email, "password": string(hashPass)}); err != nil {
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
+    token, err := CreateToken(user)
+    if err != nil {
+        rest.NotFound(w, r)
+    }
+    fmt.Println(token)
+}
+
+func CreateToken(user *models.User) (string, error) {
+    secret := "secret"
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+            "email": &user.Email,
+            "iss":   "__init__", // JWT の発行者が入る(文字列(__init__)は任意)
+    })
+    tokenString, err := token.SignedString([]byte(secret))
+    if err != nil {
+            log.Fatal(err)
+        }
+
+    return tokenString, nil
 }

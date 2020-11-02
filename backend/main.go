@@ -18,21 +18,20 @@ func main() {
 
     api := rest.NewApi()
     api.Use(rest.DefaultDevStack...)
-//     api.Use(&rest.CorsMiddleware{
-//             RejectNonCorsRequests: false,
-//             OriginValidator: func(origin string, request *rest.Request) bool {
-//                 return origin == "http://localhost:8080"
-//             },
-//             AllowedMethods: []string{"GET", "POST", "PUT", "OPTIONS"},
-//             AllowedHeaders: []string{
-//                 "Accept", "Content-Type", "X-Custom-Header", "Origin"},
-//             AccessControlAllowCredentials: true,
-//             AccessControlMaxAge:           3600,
-//         })
+    api.Use(&rest.CorsMiddleware{
+            RejectNonCorsRequests: false,
+            OriginValidator: func(origin string, request *rest.Request) bool {
+                return origin == "http://localhost:8080"
+            },
+            AllowedMethods: []string{"GET", "POST", "PUT"},
+            AllowedHeaders: []string{
+                "Accept", "Content-Type", "X-Custom-Header", "Origin"},
+            AccessControlAllowCredentials: true,
+            AccessControlMaxAge:           3600,
+        })
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", models.GetImageByCode),
         rest.Get("/code", models.GetAll),
-        rest.Options("/signUp", auth.SignUp),
         rest.Post("/signUp", auth.SignUp),
     )
     if err != nil {

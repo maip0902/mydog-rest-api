@@ -24,8 +24,6 @@ var db *mgo.Database
 func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
     code, _ := strconv.Atoi(r.PathParam("code"))
 
-//     w.Header().Set("Access-Control-Allow-Origin", "*")
-
     // 読み込みlock RLock同士はブロックしない
     lock.RLock()
     db = mongo.ConnectDB()
@@ -41,7 +39,7 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
 }
 
 func GetAll (w rest.ResponseWriter, r *rest.Request) {
-//     w.Header().Set("Access-Control-Allow-Origin", "*")
+
     db = mongo.ConnectDB()
     var codeImages []*CodeImage
     // 読み込みlock RLock同士はブロックしない
