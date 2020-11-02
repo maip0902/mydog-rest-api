@@ -21,13 +21,14 @@ export default {
   methods: {
     signup() {
       // let params = new URLSearchParams();
+      console.log(this.email)
       // params.append("email", this.email);
       // params.append( "password", this.password)
-      let data = JSON.stringify({
+      let params = JSON.stringify({
         password: this.password,
-        email: this.email
+        mail: this.email
       })
-      axios.post("http://localhost:3000/signUp", data, {headers: {'Content-Type': 'application/json', 'Accept': 'application/json'}})
+      axios.post("http://localhost:3000/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           console.log(res.data)
 
