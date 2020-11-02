@@ -20,31 +20,27 @@ var lock = sync.RWMutex{}
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
     w.Header().Set("Access-Control-Allow-Origin", "*")
     db = mongo.ConnectDB()
+    user := models.User{}
+    err := r.DecodeJsonPayload(&user)
+        err = user.CreateUserValidate()
+        if err != nil {
+            fmt.Printf("%v", err)
+            rest.NotFound(w, r)
+            return
+    }
 
-    email := r.PathParam("email")
-    password := r.PathParam("password")
-    hashPass, err := bcrypt.GenerateFromPassword([]byte(password),12)
+    hashPass, err := bcrypt.GenerateFromPassword([]byte(user.Password),12)
     if err != nil {
         fmt.Println(err)
     }
 
-    user := &models.User{
-        Email: email,
-        Password: string(hashPass),
-    }
-    err = user.CreateUserValidate()
-//     if err != nil {
-//         fmt.Printf("%v", err)
-//         rest.NotFound(w, r)
-//         return
-//     }
     lock.RLock()
-    if err := db.C("users").Insert(bson.M{"email": email, "password": string(hashPass)}); err != nil {
+    if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass)}); err != nil {
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
-    token, err := CreateToken(user)
+    token, err := CreateToken(&user)
     if err != nil {
         rest.NotFound(w, r)
     }
