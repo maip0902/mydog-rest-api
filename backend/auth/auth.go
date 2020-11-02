@@ -18,7 +18,6 @@ var db *mgo.Database
 var lock = sync.RWMutex{}
 
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
-    w.Header().Set("Access-Control-Allow-Origin", "*")
     db = mongo.ConnectDB()
     user := models.User{}
     err := r.DecodeJsonPayload(&user)
