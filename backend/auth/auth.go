@@ -11,6 +11,7 @@ import (
     "log"
     "golang.org/x/crypto/bcrypt"
     "github.com/dgrijalva/jwt-go"
+    "time"
 )
 
 var db *mgo.Database
@@ -33,17 +34,18 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         fmt.Println(err)
     }
 
+    token, err := CreateToken(&user)
+    if err != nil {
+    // ここは考えたい
+        rest.NotFound(w, r)
+    }
+
     lock.RLock()
-    if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass)}); err != nil {
+    if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass), "token": token, "verified_at": time.Now()}); err != nil {
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
-    token, err := CreateToken(&user)
-    if err != nil {
-        rest.NotFound(w, r)
-    }
-    fmt.Println(token)
 }
 
 func CreateToken(user *models.User) (string, error) {
@@ -55,7 +57,7 @@ func CreateToken(user *models.User) (string, error) {
     tokenString, err := token.SignedString([]byte(secret))
     if err != nil {
             log.Fatal(err)
-        }
+    }
 
     return tokenString, nil
 }

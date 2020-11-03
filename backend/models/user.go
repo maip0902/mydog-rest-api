@@ -4,14 +4,16 @@ import (
     "github.com/go-ozzo/ozzo-validation/v4"
     "github.com/go-ozzo/ozzo-validation/v4/is"
     "github.com/globalsign/mgo/bson"
+    "time"
 )
 
 type User struct {
-    ID bson.ObjectId   `bson:"_id"`
-    Name string        `bson:"name"`
-    Email string       `bson:"email"`
-    Password string    `bson:"password"`
-    Token string       `bson:"token"`
+    ID bson.ObjectId     `bson:"_id"`
+    Name string          `bson:"name"`
+    Email string         `bson:"email"`
+    Password string      `bson:"password"`
+    Token string         `bson:"token"`
+    VerifiedAt time.Time `bson:"verified_at"`
 }
 
 func (user *User) CreateUserValidate() error {
