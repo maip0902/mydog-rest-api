@@ -39,4 +39,11 @@ func main() {
     }
     api.SetApp(router)
    	log.Fatal(http.ListenAndServe(":" + os.Getenv("DEFAULT_PORT"), api.MakeHandler()))
+//     r := mux.NewRouter()
+//     r.Handle("/private", jwt.JwtMiddleware.Handler(private))
+//     r.Handle("/public", jwt.GetTokenHandler)
+//     //サーバー起動
+//         if err := http.ListenAndServe(":3001", r); err != nil {
+//             log.Fatal("ListenAndServe:", nil)
+//         }
 }
