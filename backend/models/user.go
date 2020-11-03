@@ -11,6 +11,7 @@ type User struct {
     Name string        `bson:"name"`
     Email string       `bson:"email"`
     Password string    `bson:"password"`
+    Token string       `bson:"token"`
 }
 
 func (user *User) CreateUserValidate() error {
