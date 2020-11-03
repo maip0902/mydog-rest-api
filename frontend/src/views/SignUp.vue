@@ -27,8 +27,10 @@ export default {
       })
       axios.post("http://localhost:3000/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
-          console.log(res.data)
-
+          console.log(res)
+          if (res.status == 200) {
+            this.$router.push("Top")
+          }
         })
     }
   }
