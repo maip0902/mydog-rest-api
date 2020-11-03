@@ -1,11 +1,9 @@
 <template>
   <div>
     <div>login page</div>
-    <form method="post">
-      email<input type="email" v-model="username">
-      password<input type="text" v-model="password">
-      <button @click="login">Login</button>
-    </form>
+    email<input type="email" v-model="email">
+    password<input type="text" v-model="password">
+    <button @click="login">Login</button>
     <router-link to="/signup">Sign Up</router-link>
   </div>
 </template>
@@ -17,7 +15,7 @@ export default {
   name: "Login",
   data () {
     return {
-      username: "",
+      email: "",
       password: ""
     }
   },
@@ -25,12 +23,15 @@ export default {
     login() {
       console.log(this.email)
       let params = JSON.stringify({
-        username: this.username,
+        email: this.email,
         password: this.password
       })
-      axios.post("http://localhost:3000/login", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+      axios.post("http://localhost:3000/signIn", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           console.log(res.data)
+          if (res.status == 200) {
+            this.$router.push("Top")
+          }
         })
     }
   }

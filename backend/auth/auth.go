@@ -48,6 +48,30 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     lock.RUnlock()
 }
 
+func SignIn(w rest.ResponseWriter, r *rest.Request) {
+    db = mongo.ConnectDB()
+    user := models.User{}
+    err := r.DecodeJsonPayload(&user)
+    password := user.Password
+    email := user.Email
+    err = db.C("users").Find(bson.M{"email": email}).One(&user)
+
+    if err != nil {
+        fmt.Println(err)
+        fmt.Println("登録されてないユーザーです")
+        return
+    }
+
+    err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+    if err != nil {
+        fmt.Println(err)
+        fmt.Println("パスワードが間違っています")
+        return
+    }
+    w.WriteJson(user)
+}
+
+
 func CreateToken(user *models.User) (string, error) {
     secret := "secret"
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
@@ -56,7 +80,7 @@ func CreateToken(user *models.User) (string, error) {
     })
     tokenString, err := token.SignedString([]byte(secret))
     if err != nil {
-            log.Fatal(err)
+        log.Fatal(err)
     }
 
     return tokenString, nil
