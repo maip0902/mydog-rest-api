@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ error }}
     <div>Sign up</div>
       email<input type="email" v-model="email">
       password<input type="password" v-model="password">
@@ -15,7 +16,8 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      error: ""
     }
   },
   methods: {
@@ -27,10 +29,14 @@ export default {
       })
       axios.post("http://localhost:3000/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
-          console.log(res)
+          console.log(res.data)
+          console.log(res.data)
           if (res.status == 200) {
             this.$router.push("Top")
           }
+        })
+        .catch((error) => {
+          this.error = error.response.data.Error
         })
     }
   }

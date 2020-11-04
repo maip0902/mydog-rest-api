@@ -6,6 +6,7 @@ import (
     "github.com/maip0902/mydog-rest-api/mongo"
     "github.com/maip0902/mydog-rest-api/models"
     "github.com/globalsign/mgo/bson"
+    "net/http"
     "sync"
     "fmt"
     "log"
@@ -25,7 +26,7 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     err = user.CreateUserValidate()
     if err != nil {
         fmt.Printf("%v", err)
-        rest.NotFound(w, r)
+        rest.Error(w, err.Error(), http.StatusBadRequest)
         return
     }
 
