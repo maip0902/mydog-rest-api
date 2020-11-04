@@ -22,27 +22,29 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     user := models.User{}
     err := r.DecodeJsonPayload(&user)
-        err = user.CreateUserValidate()
-        if err != nil {
-            fmt.Printf("%v", err)
-            rest.NotFound(w, r)
-            return
+    err = user.CreateUserValidate()
+    if err != nil {
+        fmt.Printf("%v", err)
+        rest.NotFound(w, r)
+        return
     }
 
     hashPass, err := bcrypt.GenerateFromPassword([]byte(user.Password),12)
     if err != nil {
+        w.WriteHeader(500)
         fmt.Println(err)
     }
 
     token, err := CreateToken(&user)
     if err != nil {
     // ここは考えたい
-        rest.NotFound(w, r)
+        w.WriteHeader(500)
+        return
     }
 
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass), "token": token, "verified_at": time.Now()}); err != nil {
-        rest.NotFound(w, r)
+        w.WriteHeader(500)
         return
     }
     lock.RUnlock()
@@ -57,7 +59,6 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
     err = db.C("users").Find(bson.M{"email": email}).One(&user)
 
     if err != nil {
-        fmt.Println(err)
         fmt.Println("登録されてないユーザーです")
         return
     }
@@ -65,6 +66,7 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
     err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
     if err != nil {
         fmt.Println(err)
+        w.WriteHeader(401)
         fmt.Println("パスワードが間違っています")
         return
     }
