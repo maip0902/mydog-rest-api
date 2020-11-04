@@ -32,20 +32,22 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
 
     hashPass, err := bcrypt.GenerateFromPassword([]byte(user.Password),12)
     if err != nil {
-        w.WriteHeader(500)
+        rest.Error(w, err.Error(), http.StatusInternalServerError)
         fmt.Println(err)
+        return
     }
 
     token, err := CreateToken(&user)
     if err != nil {
-    // ここは考えたい
-        w.WriteHeader(500)
+        // ここは考えたい
+        rest.Error(w, err.Error(), http.StatusInternalServerError)
+        fmt.Println(err)
         return
     }
 
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass), "token": token, "verified_at": time.Now()}); err != nil {
-        w.WriteHeader(500)
+        rest.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
     lock.RUnlock()
@@ -61,14 +63,14 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
 
     if err != nil {
         fmt.Println("登録されてないユーザーです")
+        rest.Error(w, "登録されてないユーザーです", http.StatusNotFound)
         return
     }
 
     err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(401)
         fmt.Println("パスワードが間違っています")
+        rest.Error(w, "パスワードが間違っています", http.StatusBadRequest)
         return
     }
     w.WriteJson(user)

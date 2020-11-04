@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ error }}
     <div>login page</div>
     email<input type="email" v-model="email">
     password<input type="text" v-model="password">
@@ -16,7 +17,8 @@ export default {
   data () {
     return {
       email: "",
-      password: ""
+      password: "",
+      error: ""
     }
   },
   methods: {
@@ -32,6 +34,9 @@ export default {
           if (res.status == 200) {
             this.$router.push("Top")
           }
+        })
+        .catch((error) => {
+          this.error = error.response.data.Error
         })
     }
   }
