@@ -51,6 +51,8 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
+    user.Token = token
+    w.WriteJson(user)
 }
 
 func SignIn(w rest.ResponseWriter, r *rest.Request) {
