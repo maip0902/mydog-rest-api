@@ -29,11 +29,14 @@ export default {
       })
       axios.post("http://localhost:3000/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
-          console.log(Vue)
-          console.log(res.data.Token)
-          this.$session.start()
-          this.$session.set('jwt', res.data.Token)
-          this.$router.push("Top")
+          try {
+            console.log(res.data.Token)
+            this.$session.start()
+            this.$session.set('jwt', res.data.Token)
+            this.$router.push("Top")
+          } catch (e) {
+            console.log(e)
+          }
         })
         .catch((error) => {
           this.error = error.response.data.Error
