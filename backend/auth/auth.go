@@ -30,9 +30,16 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
 
+    count, err := db.C("users").Find(bson.M{"email": user.Email}).Count()
+    if count > 0 {
+        fmt.Println("登録済みのユーザーです")
+        rest.Error(w, "登録済みのユーザーです", http.StatusBadRequest)
+        return
+    }
+
     hashPass, err := bcrypt.GenerateFromPassword([]byte(user.Password),12)
     if err != nil {
-        rest.Error(w, err.Error(), http.StatusInternalServerError)
+        rest.Error(w, err.Error(), 500)
         fmt.Println(err)
         return
     }
