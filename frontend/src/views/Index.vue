@@ -1,6 +1,6 @@
 <template>
 <div>
-  <StatusImageList/>
+  <StatusImageList :isAuthenticated="isAuthenticated"/>
 </div>
 </template>
 
@@ -11,6 +11,11 @@ import StatusImageList from "@/components/StatusImageList";
 export default {
   name: "Index",
   components: {StatusImageList},
+  data() {
+    return {
+     isAuthenticated: true
+    }
+  },
   beforeCreate() {
     if (!this.$session.exists()) {
       this.$router.push('/login')
@@ -24,6 +29,7 @@ export default {
         console.log(res)
         this.$session.set('user', res.data)
         console.log(this.$session.get('user'))
+        this.isAuthenticated = true
       })
       .catch((err) => {
         console.log(err.response)
