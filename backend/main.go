@@ -34,6 +34,7 @@ func main() {
         rest.Get("/code", models.GetAll),
         rest.Post("/signUp", auth.SignUp),
         rest.Post("/signIn", auth.SignIn),
+        rest.Post("/authUser", auth.GetAuthenticatedUser),
     )
     if err != nil {
         log.Fatal(err)

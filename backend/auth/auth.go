@@ -85,6 +85,21 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
     w.WriteJson(user)
 }
 
+func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
+    db = mongo.ConnectDB()
+    user := models.User{}
+    err := r.DecodeJsonPayload(&user)
+    token := user.Token
+    fmt.Println(token)
+    err = db.C("users").Find(bson.M{"token": token}).One(&user)
+
+    if err != nil {
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+        return
+    }
+    w.WriteJson(user)
+}
+
 
 func CreateToken(user *models.User) (string, error) {
     secret := "secret"
