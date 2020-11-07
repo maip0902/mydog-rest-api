@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import SignUp from "@/views/SignUp";
 import Top from "@/views/Top";
+import Index from "@/views/Index";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/top',
     name: 'Top',
     component: Top
+  },
+  {
+    path: '/codeImages',
+    name: 'Index',
+    component: Index
   }
 ]
 

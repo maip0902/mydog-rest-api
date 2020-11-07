@@ -1,17 +1,16 @@
 <template>
-  <div>
-    Top
-    <router-link to="/codeImages">Index</router-link>
-    <button @click="logout">
-      logout
-    </button>
-  </div>
+<div>
+  <StatusImageList/>
+</div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
+import StatusImageList from "@/components/StatusImageList";
+
 export default {
-name: "Top",
+  name: "Index",
+  components: {StatusImageList},
   beforeCreate() {
     if (!this.$session.exists()) {
       this.$router.push('/login')
@@ -28,13 +27,7 @@ name: "Top",
       })
       .catch((err) => {
         console.log(err.response)
-    })
-  },
-  methods: {
-    logout() {
-      this.$session.destroy()
-      this.$router.push('/login')
-    }
+      })
   }
 }
 </script>
