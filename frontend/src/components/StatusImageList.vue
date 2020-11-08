@@ -4,7 +4,9 @@
     <div v-for="codeImage in codeImages" v-bind:key="codeImage.id">
       <dt>{{ codeImage.Code }}</dt>
       <dd>{{ codeImage.Description }}</dd>
-      <button v-if="isAuthenticated" @click="edit">編集する</button>
+<!--      <button v-if="isAuthenticated" @click="edit">-->
+        <router-link :to="`/codeImages/${codeImage.ID}/edit`" tag="button" v-if="isAuthenticated">編集する</router-link>
+<!--      </button>-->
     </div>
   </div>
 
@@ -41,6 +43,7 @@ export default {
     },
     edit () {
       console.log(this.isAuthenticated)
+
     }
   }
 }

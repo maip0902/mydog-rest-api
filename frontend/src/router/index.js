@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import SignUp from "@/views/SignUp";
 import Top from "@/views/Top";
 import Index from "@/views/Index";
+import Edit from "@/views/Edit";
 
 Vue.use(VueRouter)
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/codeImages',
     name: 'Index',
     component: Index
+  },
+  {
+    path: '/codeImages/:id/edit',
+    name: 'Edit',
+    component: Edit
   }
 ]
 
