@@ -31,6 +31,7 @@ func main() {
         })
     router, err := rest.MakeRouter(
         rest.Get("/code/:code", models.GetImageByCode),
+        rest.Get("/codeImage/:id", models.GetImageById),
         rest.Get("/code", models.GetAll),
         rest.Post("/signUp", auth.SignUp),
         rest.Post("/signIn", auth.SignIn),

@@ -38,6 +38,23 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
     w.WriteJson(codeImage)
 }
 
+func GetImageById (w rest.ResponseWriter, r *rest.Request) {
+    id := r.PathParam("id")
+
+    // 読み込みlock RLock同士はブロックしない
+    lock.RLock()
+    db = mongo.ConnectDB()
+    var codeImage *CodeImage
+    if err := db.C("codeImage").FindId(bson.ObjectIdHex(id)).One(&codeImage); err != nil {
+        rest.NotFound(w, r)
+        return
+    }
+    lock.RUnlock()
+    fmt.Printf("%v", codeImage)
+    // HttpResponseにjson文字列を出力
+    w.WriteJson(codeImage)
+}
+
 func GetAll (w rest.ResponseWriter, r *rest.Request) {
 
     db = mongo.ConnectDB()
