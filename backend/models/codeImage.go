@@ -6,6 +6,7 @@ import (
 
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/maip0902/mydog-rest-api/mongo"
+    "net/http"
     "sync"
     "strconv"
     "fmt"
@@ -69,4 +70,29 @@ func GetAll (w rest.ResponseWriter, r *rest.Request) {
 
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImages)
+}
+
+func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
+
+    db = mongo.ConnectDB()
+    var codeImage *CodeImage
+    var fields = bson.M{}
+    err := r.DecodeJsonPayload(&codeImage)
+    if err != nil {
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
+    id := codeImage.ID
+    fmt.Println(id)
+    fields["description"] = codeImage.Description
+
+    // 読み込みlock RLock同士はブロックしない
+    lock.RLock()
+    if err := db.C("codeImage").UpdateId(id, bson.M{"$set": fields}); err != nil {
+        rest.NotFound(w, r)
+        return
+    }
+    lock.RUnlock()
+    fmt.Printf("%v", codeImage)
+    // HttpResponseにjson文字列を出力
+    w.WriteJson(codeImage)
 }

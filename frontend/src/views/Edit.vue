@@ -4,7 +4,7 @@
     <div>
       Description <input type="textarea" v-model="description">
     </div>
-    <button>編集する</button>
+    <button @click="update">編集する</button>
   </div>
 </template>
 
@@ -28,6 +28,21 @@ name: "Edit",
         this.description = res.data.Description
         this.image = res.data.Image
       })
+  },
+  methods: {
+    update() {
+      let params = JSON.stringify({
+        id: this.$route.params.id,
+        description: this.description
+      })
+      axios.post('http://localhost:3000/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err.response)
+        })
+    }
   }
 }
 </script>
