@@ -3,6 +3,7 @@
     <div>code : {{ code }}</div>
     <div>
       Description <input type="textarea" v-model="description">
+      画像 <input type="file" @change="upload">
     </div>
     <button @click="update">編集する</button>
   </div>
@@ -30,6 +31,9 @@ name: "Edit",
       })
   },
   methods: {
+    upload(event) {
+      console.log(event)
+    },
     update() {
       let params = JSON.stringify({
         id: this.$route.params.id,
