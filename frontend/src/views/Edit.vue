@@ -3,7 +3,7 @@
     <div>code : {{ code }}</div>
     <div>
       Description <input type="textarea" v-model="description">
-      画像 <input type="file" @change="upload">
+      画像 <input type="file" @change="fileSelected">
     </div>
     <button @click="update">編集する</button>
   </div>
@@ -15,9 +15,10 @@ export default {
 name: "Edit",
   data () {
     return {
-     code: "",
-     description: "",
-     image: ""
+      code: "",
+      description: "",
+      image: "",
+      fileInfo: ''
     }
   },
   created() {
@@ -31,13 +32,17 @@ name: "Edit",
       })
   },
   methods: {
-    upload(event) {
+    fileSelected(event) {
       console.log(event)
+      this.fileInfo = event.target.files[0]
     },
     update() {
+      const formData = new FormData()
+      formData.append('file', this.fileInfo)
       let params = JSON.stringify({
         id: this.$route.params.id,
-        description: this.description
+        description: this.description,
+        image: this.fileInfo
       })
       axios.post('http://localhost:3000/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
         .then((res) => {
