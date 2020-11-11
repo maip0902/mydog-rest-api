@@ -37,13 +37,13 @@ name: "Edit",
       this.fileInfo = event.target.files[0]
     },
     update() {
-      const formData = new FormData()
-      formData.append('file', this.fileInfo)
+      // const formData = new FormData()
+      // formData.append('file', this.fileInfo)
       let params = JSON.stringify({
         id: this.$route.params.id,
         description: this.description,
-        image: this.fileInfo
       })
+      // formData.append('params',params)
       axios.post('http://localhost:3000/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
         .then((res) => {
           console.log(res)
