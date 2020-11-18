@@ -1,14 +1,14 @@
 <template>
   <div id="app">
-    <div>
-      <button>
-        <router-link to="/login">Admin</router-link>
-      </button>
-    </div>
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-    </div>
-    <router-view/>
+    <div class="top_header">
+      <div class="header_app_name">
+        <router-link to="/"><strong>MyDogAPI</strong></router-link>
+      </div>
+      <div class="header_button">
+        <router-link to="/login">Admin Login</router-link>
+      </div>
+      <router-view/>
+      </div>
   </div>
 </template>
 
@@ -21,16 +21,28 @@
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+.top_header {
+  width: 100%;
+  height: 50px;
+  background-color:darksalmon
 }
 
-#nav a {
+.header_app_name {
+  float: left;
+  margin-top: 10px;
+}
+
+.header_app_name a {
   font-weight: bold;
-  color: #2c3e50;
+  text-decoration: none;  
+  font-size: 24px;
+  color: darkslateblue
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+.header_button {
+  float: right;
+  margin-top: 13px;
 }
+
+
 </style>
