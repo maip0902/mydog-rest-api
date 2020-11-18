@@ -7,8 +7,8 @@
       <div class="header_button">
         <router-link to="/login">Admin Login</router-link>
       </div>
-      <router-view/>
-      </div>
+    </div>
+    <router-view/>
   </div>
 </template>
 

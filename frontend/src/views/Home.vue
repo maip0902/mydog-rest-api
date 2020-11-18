@@ -1,7 +1,6 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/haru.jpg">
-<!--    <HelloWorld msg="Welcome to Your Vue.js App"/>-->
+  <div class="main">
+    <img alt="Vue logo" src="../assets/haru.jpg" class="top_img">
     <StatusImageList/>
   </div>
 </template>
@@ -19,3 +18,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.main  {
+  ;
+}
+</style>
