@@ -1,7 +1,8 @@
 <template>
   <div>
       <input type="text" v-model="statusCode">
-      <button>Click!</button>
+      <button @click="get">Click!</button>
+      <dt>{{description}}</dt>
   </div>
 </template>
 
@@ -12,7 +13,20 @@ export default {
   name: "TestApi",
   data() {
       return {
-          "statusCode": ""
+          "statusCode": "",
+          "description": "",
+      }
+  },
+  methods: {
+      get() {
+          axios.get("http://localhost:3000/code/" + this.statusCode)
+            .then((res) => {
+                console.log(res.data)
+                this.description = res.data.Description
+            })
+            .catch((err) => {
+                console.log(err.response)
+            })
       }
   }
 }
