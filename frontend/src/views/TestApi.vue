@@ -33,6 +33,8 @@ export default {
             })
             .catch((err) => {
                 console.log(err.response)
+                this.image = require("../assets/logo.png")
+                this.description = "Sorry, Not Found"
             })
       }
   }
