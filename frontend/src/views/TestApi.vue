@@ -20,7 +20,7 @@ export default {
       return {
           "statusCode": "",
           "description": "",
-          image : ""
+          image : "../assets/logo.png"
       }
   },
   methods: {
