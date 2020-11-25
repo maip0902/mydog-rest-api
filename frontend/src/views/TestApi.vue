@@ -28,7 +28,11 @@ export default {
           axios.get("http://localhost:3000/code/" + this.statusCode)
             .then((res) => {
                 this.description = res.data.Description
-                this.image = require("../assets/" + String(this.statusCode) + ".jpg")
+                try {
+                    this.image = require("../assets/" + String(this.statusCode) + ".jpg")
+                } catch(error) {
+                    this.image = require("../assets/no-image.jpg")
+                }
             })
             .catch((err) => {
                 console.log(err.response)
