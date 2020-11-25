@@ -20,7 +20,7 @@ export default {
       return {
           "statusCode": "",
           "description": "",
-          image : require("../assets/logo.png")
+          image : require("../assets/no-image.jpg")
       }
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
             })
             .catch((err) => {
                 console.log(err.response)
-                this.image = require("../assets/logo.png")
+                this.image = require("../assets/no-image.jpg")
                 this.description = "Sorry, Not Found"
             })
       }
@@ -51,6 +51,7 @@ export default {
 
 .box-image
 {
+    margin-top: 10px;
     margin-right: 40px;
 }
 
