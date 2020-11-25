@@ -8,5 +8,10 @@
     "code": 500,
     "image": "code-image/500.jpeg",
     "description": "Internal Server Error"
+  },
+  {
+    "code": 502,
+    "image": "code-image/502.jpeg",
+    "description": "Bad Gateway"
   }
 ]

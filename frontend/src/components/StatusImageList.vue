@@ -49,7 +49,11 @@ export default {
       console.log(this.isAuthenticated)
     },
     image(code) {
-        return require("../assets/" + String(code) + ".jpg") 
+      try {
+         return require("../assets/" + String(code) + ".jpg") 
+      } catch(error) {
+          return require("../assets/no-image.jpg")
+      }
     }
   }
 }
