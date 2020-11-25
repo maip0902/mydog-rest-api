@@ -1,9 +1,9 @@
 <template>
   <div>
     Code List
-    <div v-for="codeImage in codeImages" v-bind:key="codeImage.id">
-      <div>{{ codeImage.Code }}</div>
+    <div v-for="codeImage in codeImages" v-bind:key="codeImage.id" class="list-card">
       <img :src=image(codeImage.Code) class="list-image">
+      <div>{{ codeImage.Code }}</div>
       <div>{{ codeImage.Description }}</div>
         <router-link :to="`/codeImages/${codeImage.ID}/edit`" tag="button" v-if="isAuthenticated">編集する</router-link>
     </div>
@@ -56,6 +56,11 @@ export default {
 </script>
 
 <style scoped>
+.list-card 
+{
+  padding: 10px;
+}
+
 .list-image 
 {
   width: 150px;
