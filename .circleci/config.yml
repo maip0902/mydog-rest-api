@@ -47,7 +47,7 @@ jobs:
   build-test-frontend:
     working_directory: ~/mydog-rest-api/frontend
     docker:
-      - image: circleci/node:4.8.2-jessie
+      - image: circleci/node:10
     steps:
       - attach_workspace:
           at: .
@@ -77,4 +77,4 @@ workflows:
               only:
                 - master
           requires:
-            - checkout
+            - build-test-backend
