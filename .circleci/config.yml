@@ -33,7 +33,7 @@ jobs:
             EOF
       - run: 
           name: change directory backend
-          command: cd backend
+          command: cd backend/backend
       - run: 
           name: make directory
           command: mkdir main
