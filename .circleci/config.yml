@@ -31,12 +31,6 @@ jobs:
             DB_PORT=27017
             DB_NAME=mydog-api
             EOF
-      - run: 
-          name: make directory
-          command: mkdir main
-      - run: 
-          name: make directory
-          command: ls
       - run: go get github.com/lib/pq
       - run:
           name: go build test
