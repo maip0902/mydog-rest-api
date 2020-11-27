@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
   build-test-backend:
-    working_directory: ~/mydog-rest-api/backend
+    working_directory: ~/mydog-rest-api
     docker:
       - image: circleci/golang:1.12 
     steps:
@@ -19,14 +19,17 @@ jobs:
             DB_PORT=27017
             DB_NAME=mydog-api
             EOF
-      - run:
+      - run: 
+          name: change directory backend
+          command: cd backend
+      - run: 
           name: make directory
           command: mkdir main
       - run:
           name: go build test
           command: 'go build -o ./main'
   build-test-frontend:
-    working_directory: ~/mydog-rest-api/frontend
+    working_directory: ~/mydog-rest-api
     docker:
       - image: circleci/node:4.8.2-jessie
     steps:
