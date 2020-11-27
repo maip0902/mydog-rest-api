@@ -25,6 +25,9 @@ jobs:
       - run: 
           name: make directory
           command: mkdir main
+      - run: 
+          name: make directory
+          command: ls
       - run:
           name: go build test
           command: 'go build -o ./main'
