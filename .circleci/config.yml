@@ -42,7 +42,7 @@ jobs:
       - image: circleci/node:10
     steps:
       - attach_workspace:
-          at: .
+          at: ~/mydog-rest-api
       - run:
           name: vue build test
           command: 'npm run build'
