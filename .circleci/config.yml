@@ -1,11 +1,23 @@
 version: 2.1
 jobs:
-  build-test-backend:
-    working_directory: ~/mydog-rest-api
+  checkout:
     docker:
       - image: circleci/golang:1.12 
     steps:
-      - checkout
+      - checkout:
+            path: ~/mydog-rest-api
+      - persist_to_workspace:
+            root: ~/mydog-rest-api
+            paths:
+                - .
+
+  build-test-backend:
+    working_directory: ~/mydog-rest-api/backend
+    docker:
+      - image: circleci/golang:1.12 
+    steps:
+      - attach_workspace:
+          at: .
       - run:
           name: create .env
           command: 'touch .env'
@@ -31,29 +43,38 @@ jobs:
       - run:
           name: go build test
           command: 'go build -o ./main'
+
   build-test-frontend:
-    working_directory: ~/mydog-rest-api
+    working_directory: ~/mydog-rest-api/frontend
     docker:
       - image: circleci/node:4.8.2-jessie
     steps:
-      - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: vue build test
           command: 'npm run build'
 
 workflows:
   version: 2
-  build-workflow:
+  build-test-deploy:
     jobs:
-      - build-test-backend:
+      - checkout:
         filters:
           branches:
             only:
               - master
+      - build-test-backend:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - checkout
       - build-test-frontend:
           filters:
             branches:
               only:
                 - master
           requires:
-            - build-test-backend
+            - checkout
