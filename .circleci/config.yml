@@ -12,12 +12,12 @@ jobs:
                 - .
 
   build-test-backend:
-    working_directory: ~/mydog-rest-api
+    working_directory: ~/mydog-rest-api/backend
     docker:
       - image: circleci/golang:1.12 
     steps:
       - attach_workspace:
-          at: .
+          at: ~/mydog-rest-api
       - run:
           name: create .env
           command: 'touch .env'
@@ -31,12 +31,6 @@ jobs:
             DB_PORT=27017
             DB_NAME=mydog-api
             EOF
-      - run: 
-          name: change directory backend
-          command: cd backend
-      - run: 
-          name: change directory backend
-          command: cd backend
       - run: 
           name: make directory
           command: mkdir main
