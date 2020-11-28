@@ -21,7 +21,7 @@ func main() {
     api.Use(&rest.CorsMiddleware{
             RejectNonCorsRequests: false,
             OriginValidator: func(origin string, request *rest.Request) bool {
-                return origin == "http://localhost:8080"
+                return origin == "http://localhost"
             },
             AllowedMethods: []string{"GET", "POST", "PUT"},
             AllowedHeaders: []string{
@@ -30,13 +30,13 @@ func main() {
             AccessControlMaxAge:           3600,
         })
     router, err := rest.MakeRouter(
-        rest.Get("/code/:code", models.GetImageByCode),
-        rest.Get("/codeImage/:id", models.GetImageById),
-        rest.Post("/codeImage/:id", models.UpdateImage),
-        rest.Get("/code", models.GetAll),
-        rest.Post("/signUp", auth.SignUp),
-        rest.Post("/signIn", auth.SignIn),
-        rest.Post("/authUser", auth.GetAuthenticatedUser),
+        rest.Get("/api/code/:code", models.GetImageByCode),
+        rest.Get("/api/codeImage/:id", models.GetImageById),
+        rest.Post("/api/codeImage/:id", models.UpdateImage),
+        rest.Get("/api/code", models.GetAll),
+        rest.Post("/api/signUp", auth.SignUp),
+        rest.Post("/api/signIn", auth.SignIn),
+        rest.Post("/api/authUser", auth.GetAuthenticatedUser),
     )
     if err != nil {
         log.Fatal(err)

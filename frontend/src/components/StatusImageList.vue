@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     getCode () {
-      axios.get('http://localhost:3000/code')
+      axios.get('http://localhost/api/code')
         .then(res => {
           console.log(res.data)
           this.codeImages = res.data

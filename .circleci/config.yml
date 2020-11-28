@@ -9,7 +9,7 @@ jobs:
       - persist_to_workspace:
             root: ~/mydog-rest-api
             paths:
-                - .
+                - . 
 
   build-test-backend:
     working_directory: ~/mydog-rest-api/backend
