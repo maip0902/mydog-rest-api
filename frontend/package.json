@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "watch": "webpack --mode development --watch",
+    "sass-build": "webpack --mode development"
   },
   "dependencies": {
     "axios": "^0.20.0",
@@ -20,7 +22,14 @@
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "vue-template-compiler": "^2.6.11"
+    "css-loader": "^5.0.1",
+    "mini-css-extract-plugin": "^1.3.2",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
+    "style-loader": "^2.0.0",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.2.0"
   },
   "browserslist": [
     "> 1%",

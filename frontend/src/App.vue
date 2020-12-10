@@ -22,9 +22,9 @@
 }
 
 .top_header {
-  width: 100%;
-  height: 50px;
-  background-color:darksalmon
+    width: 100%;
+    height: 50px;
+    background-color:darksalmon;
 }
 
 .header_app_name {

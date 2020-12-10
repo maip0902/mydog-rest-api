@@ -70,6 +70,6 @@ services:
     tty: true
     command: /bin/sh
     volumes:
-      - ./frontend:/src/frontend
+      - ./frontend:/frontend
     ports:
       - "8080:8080"
