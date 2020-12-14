@@ -1,11 +1,21 @@
 <template>
   <div id="app">
-    <div class="top_header">
-      <div class="header_app_name">
-        <router-link to="/"><strong>MyDogAPI</strong></router-link>
+    <div class="top-header">
+      <router-link to="/"><h1 class="header-logo">MyDogAPI</h1></router-link>
+      <div class="header-button">
+        <router-link to="/login">
+          <button class="main-btn header-btn">
+            Admin Login
+          </button>
+        </router-link>
+        <ul class="header-nav">
+          <li class="header-nav-itm"><router-link to="/login">TOP</router-link></li>
+          <li class="header-nav-itm">TEST</li>
+          <li class="header-nav-itm">CONTACT</li>
+        </ul>
       </div>
-      <div class="header_button">
-        <router-link to="/login">Admin Login</router-link>
+      <div>
+
       </div>
     </div>
     <router-view/>
