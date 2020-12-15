@@ -115,3 +115,33 @@ a {
         }
     }
 }
+
+h2 {
+    color: #FFAD90;
+    font-family: 'Gungsuh';
+}
+
+.status-list {
+    padding: 0;
+    width: 40%;
+    margin: 10px auto;
+
+    .status-item {
+        
+        list-style: none;
+        background-color: #FFAD90;
+
+        .status-image {
+            width: 100%;
+            height: 300px;;
+
+        }
+        .status-code {
+            color: aliceblue;
+            font-weight: bold;
+        }
+        .status-dp {
+            color: aliceblue;
+        }
+    }
+}

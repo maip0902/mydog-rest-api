@@ -13,11 +13,6 @@
       </div>
     </div>
     <StatusImageList/>
-    <router-link to="/test">
-      <button>
-        <strong>Go Test!</strong>
-      </button>
-    </router-link>
   </div>
 </template>
 
