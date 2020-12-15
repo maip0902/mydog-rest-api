@@ -7,11 +7,6 @@
       <div>{{ codeImage.Description }}</div>
         <router-link :to="`/codeImages/${codeImage.ID}/edit`" tag="button" v-if="isAuthenticated">編集する</router-link>
     </div>
-    <router-link to="/test">
-      <button>
-        <strong>Go Test!</strong>
-      </button>
-    </router-link>
   </div>
 
 </template>

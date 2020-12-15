@@ -14,9 +14,6 @@
           <li class="header-nav-itm">CONTACT</li>
         </ul>
       </div>
-      <div>
-
-      </div>
     </div>
     <router-view/>
   </div>
