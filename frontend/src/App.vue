@@ -9,7 +9,7 @@
           </button>
         </router-link>
         <ul class="header-nav">
-          <li class="header-nav-itm"><router-link to="/login">TOP</router-link></li>
+          <li class="header-nav-itm"><router-link to="/">TOP</router-link></li>
           <li class="header-nav-itm">TEST</li>
           <li class="header-nav-itm">CONTACT</li>
         </ul>
