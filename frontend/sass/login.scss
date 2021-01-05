@@ -3,7 +3,7 @@
 
     .login-label {
         display: inline-block;
-        width: 100px;
+        width: 200px;
     }
 
     .login-field {
@@ -24,6 +24,11 @@
     margin: 10px auto;
 }
 
+.login-btn:hover {
+    border:2px solid #FFAD90;
+    background-color: #FFAD90;
+}
+
 .register-btn {
     width: 120px;
     border: 2px solid #FF82B2;
@@ -31,4 +36,9 @@
     border-radius: 10px;
     color: aliceblue;
     box-shadow: 2px 2px 10px 0 aliceblue 
+}
+
+.register-btn:hover {
+    border: 2px solid #FFABCE;
+    background-color: #FFABCE;
 }
