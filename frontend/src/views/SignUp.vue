@@ -8,12 +8,12 @@
     
     <div class="login-input">
       <label for="password" class="login-label">パスワード</label>
-      <input id="password" type="text" class="login-field" v-model="password">
+      <input id="password" type="password" class="login-field" v-model="password">
     </div>
 
     <div class="login-input">
       <label for="password_confirm" class="login-label">パスワード(確認用)</label>
-      <input id="password_confirm" type="text" class="login-field" v-model="passwordConfirm">
+      <input id="password_confirm" type="password" class="login-field" v-model="passwordConfirm">
     </div>
     
     <div class="btn-field">
