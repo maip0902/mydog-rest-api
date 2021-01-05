@@ -20,6 +20,7 @@
 </template>
 
 <style lang="scss">
+@import "../sass/common.scss";
 @import "../sass/top.scss";
 @import "../sass/login.scss";
 </style>

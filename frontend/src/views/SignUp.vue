@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ error }}
+    <p class="text-danger">{{ error }}</p>
     <div class="login-input">
       <label for="email" class="login-label">メールアドレス</label>
       <input id="email" type="email" class="login-field" v-model="email">
