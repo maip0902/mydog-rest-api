@@ -23,7 +23,7 @@ name: "Edit",
   },
   created() {
   console.log(this.$route.params.id)
-    axios.get('http://localhost:3000/codeImage/' + this.$route.params.id)
+    axios.get('http://localhost/api/codeImage/' + this.$route.params.id)
       .then((res) => {
         console.log(res.data)
         this.code = res.data.Code
@@ -44,7 +44,7 @@ name: "Edit",
         description: this.description,
       })
       // formData.append('params',params)
-      axios.post('http://localhost:3000/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
+      axios.post('http://localhost/api/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
         .then((res) => {
           console.log(res)
         })
