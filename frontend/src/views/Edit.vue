@@ -22,7 +22,7 @@ name: "Edit",
       description: "",
       image: "",
       base64Image: "",
-      fileInfo: ''
+      fileInfo: '',
     }
   },
   created() {
@@ -44,7 +44,6 @@ name: "Edit",
         const reader = new FileReader();
         reader.onload = (e) => {
           this.createImageObject(e.target.result)
-          this.base64Image = e.target.result;
         }
         reader.readAsDataURL(file);
     },
@@ -56,7 +55,10 @@ name: "Edit",
         const resizedBase64 = this.resize(image);
         const resizedImage = this.base64ToBlob(resizedBase64);
         const resizedImg = this.createObjectUrl(resizedImage);
-        this.base64Image = resizedImg;
+        console.log(resizedImage);
+        console.log(resizedImg);
+        this.base64Image = resizedBase64;
+        this.fileInfo = resizedImg;
       };
       image.src = file;
     },
@@ -78,7 +80,7 @@ name: "Edit",
       return canvas.toDataURL('image/jpg');
     },
     createObjectUrl(resizedImage) {
-      return window.URL.createObjectURL(resizedImage);
+      return URL.createObjectURL(resizedImage);
     },
     update() {
       // const formData = new FormData()
