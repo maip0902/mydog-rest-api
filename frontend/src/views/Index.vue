@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="main">
   <StatusImageList :isAuthenticated="isAuthenticated"/>
 </div>
 </template>

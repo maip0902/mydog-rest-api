@@ -6,8 +6,8 @@
         <img :src=image(codeImage.Code) class="status-image">
         <p class="status-code">{{ codeImage.Code }}</p>
         <p class="status-dp">{{ codeImage.Description }}</p>
-        <router-link :to="`/codeImages/${codeImage.ID}/edit`" tag="button" v-if="isAuthenticated">編集する</router-link>
       </li>
+      <router-link :to="`/codeImages/${codeImage.ID}/edit`" tag="button" v-if="isAuthenticated" class="main-btn">編集する</router-link>
     </ul>
   </div>
 
