@@ -55,10 +55,8 @@ name: "Edit",
         const resizedBase64 = this.resize(image);
         const resizedImage = this.base64ToBlob(resizedBase64);
         const resizedImg = this.createObjectUrl(resizedImage);
-        console.log(resizedImage);
-        console.log(resizedImg);
         this.base64Image = resizedBase64;
-        this.fileInfo = resizedImg;
+        this.fileInfo = resizedBase64;
       };
       image.src = file;
     },
@@ -83,13 +81,12 @@ name: "Edit",
       return URL.createObjectURL(resizedImage);
     },
     update() {
-      // const formData = new FormData()
-      // formData.append('file', this.fileInfo)
       let params = JSON.stringify({
         id: this.$route.params.id,
         description: this.description,
+        image: this.fileInfo.replace(/^data:\w+\/\w+;base64,/, '')
       })
-      // formData.append('params',params)
+      console.log(params);
       axios.post('http://localhost/api/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
         .then((res) => {
           console.log(res)

@@ -12,5 +12,6 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/joho/godotenv v1.3.0
+	github.com/vincent-petithory/dataurl v0.0.0-20191104211930-d1553a71de50
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
 )

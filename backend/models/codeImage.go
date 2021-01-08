@@ -4,12 +4,14 @@ import (
     "github.com/globalsign/mgo/bson"
     "github.com/globalsign/mgo"
 
+    "encoding/base64"
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/maip0902/mydog-rest-api/mongo"
     "net/http"
     "sync"
     "strconv"
     "fmt"
+    "os"
 )
 type CodeImage struct {
     ID bson.ObjectId   `bson:"_id"`
@@ -78,11 +80,18 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     var codeImage *CodeImage
     var fields = bson.M{}
     err := r.DecodeJsonPayload(&codeImage)
+    data, _ := base64.StdEncoding.DecodeString(codeImage.Image)
+    f, _ := os.Create("hoge.png")
+    _, err = f.Write(data)
+    if err != nil {
+        fmt.Println(err)
+    }
+
     if err != nil {
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
     }
     id := codeImage.ID
-    fmt.Println(id)
+    // fmt.Println(id)
     fields["description"] = codeImage.Description
 
     // 読み込みlock RLock同士はブロックしない
@@ -92,7 +101,7 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
-    fmt.Printf("%v", codeImage)
+    // fmt.Printf("%v", codeImage)
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
 }
