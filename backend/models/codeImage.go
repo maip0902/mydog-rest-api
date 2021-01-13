@@ -87,7 +87,8 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     data, _ := base64.StdEncoding.DecodeString(codeImage.Image)
     f, _ := os.Create("hoge.png")
     _, err = f.Write(data)
-
+    f, err = os.Open("hoge.png")
+    fmt.Println(f)
     AccessKeyID := os.Getenv("AWS_ACCESS_KEY_ID")
     SecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
     MyRegion := os.Getenv("AWS_REGION")
@@ -108,7 +109,7 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     up, err := uploader.Upload(&s3manager.UploadInput{
         Bucket: aws.String("code-image"),
         ACL:    aws.String("public-read"),
-        Key:    aws.String("aaa.png"),
+        Key:    aws.String("a.png"),
         Body:   f,
     })
 
