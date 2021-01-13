@@ -12,6 +12,10 @@ import (
     "strconv"
     "fmt"
     "os"
+    "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go/aws/session"
+    "github.com/aws/aws-sdk-go/aws/credentials"
+    "github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 type CodeImage struct {
     ID bson.ObjectId   `bson:"_id"`
@@ -83,13 +87,37 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     data, _ := base64.StdEncoding.DecodeString(codeImage.Image)
     f, _ := os.Create("hoge.png")
     _, err = f.Write(data)
-    if err != nil {
-        fmt.Println(err)
-    }
+
+    AccessKeyID := os.Getenv("AWS_ACCESS_KEY_ID")
+    SecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+    MyRegion := os.Getenv("AWS_REGION")
+    sess, err := session.NewSession(
+     &aws.Config{
+      Endpoint: aws.String("http://minio:9000"),
+      Region: aws.String(MyRegion),
+      S3ForcePathStyle: aws.Bool(true),
+      Credentials: credentials.NewStaticCredentials(
+       AccessKeyID,
+       SecretAccessKey,
+       "", 
+      ),
+    })
+
+    uploader := s3manager.NewUploader(sess)
+
+    up, err := uploader.Upload(&s3manager.UploadInput{
+        Bucket: aws.String("code-image"),
+        ACL:    aws.String("public-read"),
+        Key:    aws.String("aaa.png"),
+        Body:   f,
+    })
 
     if err != nil {
+        fmt.Println(err)
+        fmt.Println("アップロードエラー")
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
     }
+    fmt.Println(up)
     id := codeImage.ID
     // fmt.Println(id)
     fields["description"] = codeImage.Description
