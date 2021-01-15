@@ -32,6 +32,7 @@ func main() {
     router, err := rest.MakeRouter(
         rest.Get("/api/code/:code", models.GetImageByCode),
         rest.Get("/api/codeImage/:id", models.GetImageById),
+        rest.Get("/api/codeImage/image/:code", models.GetStatusImage),
         rest.Post("/api/codeImage/:id", models.UpdateImage),
         rest.Get("/api/code", models.GetAll),
         rest.Post("/api/signUp", auth.SignUp),

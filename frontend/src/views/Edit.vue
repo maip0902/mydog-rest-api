@@ -6,6 +6,10 @@
       画像 <input type="file" @change="fileSelected">
     </div>
   <div>
+    いまの画像
+    <img class="preview-image" :src="imageData">
+  </div>
+  <div>
     <img class="preview-image" :src="base64Image">
   </div>
     <button @click="update">編集する</button>
@@ -23,6 +27,7 @@ name: "Edit",
       image: "",
       base64Image: "",
       fileInfo: '',
+      imageData: ""
     }
   },
   created() {
@@ -33,7 +38,12 @@ name: "Edit",
         this.code = res.data.Code
         this.description = res.data.Description
         this.image = res.data.Image
+        axios.get('http://localhost/api/codeImage/image/' + this.code)
+      .then((res) => {
+        console.log(res.data)
+        this.imageData = 'data:image/png;base64,' + res.data.Image
       })
+      })    
   },
   methods: {
     fileSelected(event) {

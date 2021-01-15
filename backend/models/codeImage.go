@@ -10,11 +10,13 @@ import (
     "net/http"
     "sync"
     "strconv"
+    "io/ioutil"
     "fmt"
     "os"
     "github.com/aws/aws-sdk-go/aws"
     "github.com/aws/aws-sdk-go/aws/session"
     "github.com/aws/aws-sdk-go/aws/credentials"
+    "github.com/aws/aws-sdk-go/service/s3"
     "github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 type CodeImage struct {
@@ -22,6 +24,10 @@ type CodeImage struct {
     Code  int          `bson:"code"`
     Image string       `bson:"image"`
     Description string `bson:"description"`
+}
+
+type Image struct {
+    Image string   `bson:"image"`
 }
 
 // 読み込みと書き込みの競合解決
@@ -134,4 +140,39 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     // fmt.Printf("%v", codeImage)
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
+}
+
+func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
+    image := r.PathParam("code")
+    AccessKeyID := os.Getenv("AWS_ACCESS_KEY_ID")
+    SecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
+    MyRegion := os.Getenv("AWS_REGION")
+    sess, err := session.NewSession(
+     &aws.Config{
+      Endpoint: aws.String("http://minio:9000"),
+      Region: aws.String(MyRegion),
+      S3ForcePathStyle: aws.Bool(true),
+      Credentials: credentials.NewStaticCredentials(
+       AccessKeyID,
+       SecretAccessKey,
+       "", 
+      ),
+    })
+    f, err := os.Create(image + ".png")
+	if err != nil {
+		fmt.Println(err)
+	}
+    downloader := s3manager.NewDownloader(sess)
+	n, err := downloader.Download(f, &s3.GetObjectInput{
+		Bucket: aws.String("code-image"),
+		Key:    aws.String(image + ".png"),
+    })
+    fmt.Println(n)
+    f, err = os.Open(image + ".png")
+    data, _ := ioutil.ReadAll(f)
+    encodedImage := base64.StdEncoding.EncodeToString(data)
+	if err != nil {
+		fmt.Println(err)
+    }
+    w.WriteJson(&Image{encodedImage})
 }
