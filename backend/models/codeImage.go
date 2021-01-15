@@ -85,9 +85,9 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     var fields = bson.M{}
     err := r.DecodeJsonPayload(&codeImage)
     data, _ := base64.StdEncoding.DecodeString(codeImage.Image)
-    f, _ := os.Create("hoge.png")
+    f, _ := os.Create("codeImage.png")
     _, err = f.Write(data)
-    f, err = os.Open("hoge.png")
+    f, err = os.Open("codeImage.png")
     fmt.Println(f)
     AccessKeyID := os.Getenv("AWS_ACCESS_KEY_ID")
     SecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
@@ -105,11 +105,11 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     })
 
     uploader := s3manager.NewUploader(sess)
-
+    fmt.Println(codeImage.Code)
     up, err := uploader.Upload(&s3manager.UploadInput{
         Bucket: aws.String("code-image"),
         ACL:    aws.String("public-read"),
-        Key:    aws.String("a.png"),
+        Key:    aws.String(strconv.Itoa(codeImage.Code) + ".png"),
         Body:   f,
     })
 
@@ -119,6 +119,7 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
     }
     fmt.Println(up)
+    fields["image"] = strconv.Itoa(codeImage.Code) + ".png"
     id := codeImage.ID
     // fmt.Println(id)
     fields["description"] = codeImage.Description

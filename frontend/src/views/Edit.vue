@@ -82,6 +82,7 @@ name: "Edit",
     },
     update() {
       let params = JSON.stringify({
+        code: this.code,
         id: this.$route.params.id,
         description: this.description,
         image: this.fileInfo.replace(/^data:\w+\/\w+;base64,/, '')
