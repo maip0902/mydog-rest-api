@@ -38,7 +38,7 @@ export default {
         email: this.email,
         password: this.password
       })
-      axios.post("http://localhost:3000/signIn", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+      axios.post("http://localhost/api/signIn", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           this.$router.push("Top")
         })
