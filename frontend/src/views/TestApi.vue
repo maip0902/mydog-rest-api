@@ -3,7 +3,7 @@
       <input type="text" v-model="statusCode" class="main-input">
       <button @click="get" class="main-button">Click!</button>
       <div class="box-image">
-          <img :src=image class="list-image"> 
+          <img :src="image" class="list-image"> 
       </div>
     <div class="main-box">
       <div class="main-description">{{description}}</div>
@@ -20,7 +20,7 @@ export default {
       return {
           "statusCode": "",
           "description": "",
-          image : require("../assets/no-image.jpg")
+          "image" : require("../assets/no-image.jpg")
       }
   },
   methods: {
@@ -28,11 +28,10 @@ export default {
           axios.get("http://localhost:3000/api/code/" + this.statusCode)
             .then((res) => {
                 this.description = res.data.Description
-                try {
-                    this.image = require("../assets/" + String(this.statusCode) + ".jpg")
-                } catch(error) {
-                    this.image = require("../assets/no-image.jpg")
-                }
+                axios.get('http://localhost/api/codeImage/image/' + this.statusCode)
+                    .then((res) => {
+                        this.image = res.data.Image == "" ? require("../assets/no-image.jpg") : 'data:image/png;base64,' + res.data.Image
+                    })
             })
             .catch((err) => {
                 console.log(err.response)
