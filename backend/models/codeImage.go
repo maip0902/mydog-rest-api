@@ -118,6 +118,8 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
         }
         fmt.Println(up)
         fields["image"] = strconv.Itoa(codeImage.Code) + ".png"
+        f.Close()
+        os.Remove("codeImage.png")
     }
     
     id := codeImage.ID
