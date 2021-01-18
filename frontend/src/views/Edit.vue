@@ -3,14 +3,17 @@
     <div>code : {{ code }}</div>
     <div>
       Description <input type="textarea" v-model="description">
-      画像 <input type="file" @change="fileSelected">
+      画像 <input id="image" type="file" @change="fileSelected" style="display:none">
+      <button @click="selectFile"> 画像を選択</button>
     </div>
   <div>
-    いまの画像
+    <div>いまの画像</div>
     <img class="preview-image" :src="imageData">
   </div>
-  <div>
+  <div v-if="isUploaded">
+    <div>新しい画像</div>
     <img class="preview-image" :src="base64Image">
+    <button @click="cancelImage">この画像をキャンセル</button>
   </div>
     <button @click="update">編集する</button>
   </div>
@@ -27,7 +30,8 @@ name: "Edit",
       image: "",
       base64Image: "",
       fileInfo: '',
-      imageData: ""
+      imageData: "",
+      isUploaded: false
     }
   },
   created() {
@@ -46,7 +50,11 @@ name: "Edit",
       })    
   },
   methods: {
+    selectFile() {
+      $('#image').click()
+    },
     fileSelected(event) {
+      this.isUploaded = true
       this.fileInfo = event.target.files[0]
       this.generateImageUrl(this.fileInfo);
     },
@@ -89,6 +97,11 @@ name: "Edit",
     },
     createObjectUrl(resizedImage) {
       return URL.createObjectURL(resizedImage);
+    },
+    cancelImage() {
+      this.isUploaded = false
+      this.fileInfo = ""
+      $('#image').val(null)
     },
     update() {
       let params = JSON.stringify({
