@@ -3,7 +3,7 @@
     <h2>ステータスサンプル</h2>
     <ul v-for="codeImage in codeImages" v-bind:key="codeImage.id" class="status-list">
       <li class="status-item">
-        <img :src="imageData" class="status-image">
+        <img :src="codeImage.Image" class="status-image">
         <p class="status-code">{{ codeImage.Code }}</p>
         <p class="status-dp">{{ codeImage.Description }}</p>
       </li>
@@ -40,22 +40,13 @@ export default {
         .then(res => {
           this.codeImages = res.data
           this.codeImages.map((value) => {
-            this.image(value.Code)
-            value.Image = this.image(value.Code)
+            axios.get('http://localhost/api/codeImage/image/' + String(value.Code))
+              .then((res) => {
+                value.Image = res.data.Image == "" ? require("../assets/no-image.jpg") : 'data:image/png;base64,' + res.data.Image
+              })
           })
-          console.log(this.codeImages)
         })
     },
-    edit () {
-      console.log(this.isAuthenticated)
-    },
-    image(code) {
-      axios.get('http://localhost/api/codeImage/image/' + String(code))
-        .then((res) => {
-          this.imageData = 'data:image/png;base64,' + res.data.Image
-          return this.imageData
-        })
-    }
   }
 }
 </script>
