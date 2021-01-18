@@ -13,7 +13,7 @@ export default {
   components: {StatusImageList},
   data() {
     return {
-     isAuthenticated: true
+     isAuthenticated: false
     }
   },
   beforeCreate() {
@@ -24,9 +24,9 @@ export default {
     let params = JSON.stringify({
       token: this.$session.get('jwt')
     })
-    axios.post("http://localhost:3000/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+    axios.post("http://localhost/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
       .then((res) => {
-        console.log(res)
+        console.log(this.$session.get('user'))
         this.$session.set('user', res.data)
         console.log(this.$session.get('user'))
         this.isAuthenticated = true

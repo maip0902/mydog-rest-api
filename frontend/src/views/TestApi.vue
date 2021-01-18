@@ -25,7 +25,7 @@ export default {
   },
   methods: {
       get() {
-          axios.get("http://localhost:3000/api/code/" + this.statusCode)
+          axios.get("http://localhost/api/code/" + this.statusCode)
             .then((res) => {
                 this.description = res.data.Description
                 axios.get('http://localhost/api/codeImage/image/' + this.statusCode)

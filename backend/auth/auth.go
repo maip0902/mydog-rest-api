@@ -94,6 +94,7 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     err = db.C("users").Find(bson.M{"token": token}).One(&user)
 
     if err != nil {
+        fmt.Println(err)
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
         return
     }

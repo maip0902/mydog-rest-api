@@ -40,6 +40,7 @@ export default {
       })
       axios.post("http://localhost/api/signIn", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
+          this.$session.set('jwt', res.data.Token)
           this.$router.push("Top")
         })
         .catch((error) => {
