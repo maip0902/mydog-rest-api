@@ -8,7 +8,7 @@
     
     <div class="login-input">
       <label for="password" class="login-label">password</label>
-      <input id="password" type="text" class="login-field" v-model="password">
+      <input id="password" type="password" class="login-field" v-model="password">
     </div>
     
     <div class="btn-field">

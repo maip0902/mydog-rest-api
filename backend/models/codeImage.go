@@ -7,6 +7,7 @@ import (
     "encoding/base64"
     "github.com/ant0ine/go-json-rest/rest"
     "github.com/maip0902/mydog-rest-api/mongo"
+    "github.com/maip0902/mydog-rest-api/awssession"
     "net/http"
     "sync"
     "strconv"
@@ -94,21 +95,8 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     f, _ := os.Create("codeImage.png")
     _, err = f.Write(data)
     f, err = os.Open("codeImage.png")
-    fmt.Println(f)
-    AccessKeyID := os.Getenv("AWS_ACCESS_KEY_ID")
-    SecretAccessKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-    MyRegion := os.Getenv("AWS_REGION")
-    sess, err := session.NewSession(
-     &aws.Config{
-      Endpoint: aws.String("http://minio:9000"),
-      Region: aws.String(MyRegion),
-      S3ForcePathStyle: aws.Bool(true),
-      Credentials: credentials.NewStaticCredentials(
-       AccessKeyID,
-       SecretAccessKey,
-       "", 
-      ),
-    })
+    
+    sess, err := awssession.StartSession()
 
     uploader := s3manager.NewUploader(sess)
     fmt.Println(codeImage.Code)
