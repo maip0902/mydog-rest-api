@@ -141,21 +141,39 @@ func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
     
     sess, err := awssession.StartSession()
     
-    f, err := os.Create(image + ".png")
-	if err != nil {
-		fmt.Println(err)
-	}
-    downloader := s3manager.NewDownloader(sess)
-	n, err := downloader.Download(f, &s3.GetObjectInput{
+    // ダウンロードする場合
+    // f, err := os.Create(image + ".png")
+	// if err != nil {
+	// 	fmt.Println(err)
+    // }
+    // downloader := s3manager.NewDownloader(sess)
+	// n, err := downloader.Download(f, &s3.GetObjectInput{
+	// 	Bucket: aws.String("code-image"),
+	// 	Key:    aws.String(image + ".png"),
+    // })
+    // fmt.Println(n)
+
+    // f, err = os.Open(image + ".png")
+    // data, _ := ioutil.ReadAll(f)
+    // encodedImage := base64.StdEncoding.EncodeToString(data)
+	// if err != nil {
+	// 	fmt.Println(err)
+    // }
+    // w.WriteJson(&Image{encodedImage})
+
+    // 読み込む場合
+    svc := s3.New(sess)
+
+	obj, err := svc.GetObject(&s3.GetObjectInput{
 		Bucket: aws.String("code-image"),
 		Key:    aws.String(image + ".png"),
-    })
-    fmt.Println(n)
-    f, err = os.Open(image + ".png")
-    data, _ := ioutil.ReadAll(f)
-    encodedImage := base64.StdEncoding.EncodeToString(data)
+	})
 	if err != nil {
 		fmt.Println(err)
     }
+    rc := obj.Body
+    data, _ := ioutil.ReadAll(rc)
+    encodedImage := base64.StdEncoding.EncodeToString(data)
+
     w.WriteJson(&Image{encodedImage})
 }
