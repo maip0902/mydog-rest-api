@@ -1,10 +1,7 @@
 <template>
   <div>
-    Top
-    <router-link to="/codeImages">Index</router-link>
-    <button @click="logout">
-      logout
-    </button>
+    <div>管理者画面TOP</div>
+    <router-link to="/codeImages" class="main-btn">ステータスコード一覧</router-link>
   </div>
 </template>
 
@@ -30,12 +27,6 @@ name: "Top",
         console.log(err.response)
     })
   },
-  methods: {
-    logout() {
-      this.$session.destroy()
-      this.$router.push('/login')
-    }
-  }
 }
 </script>
 
