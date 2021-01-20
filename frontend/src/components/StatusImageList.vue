@@ -44,6 +44,10 @@ export default {
               .then((res) => {
                 value.Image = res.data.Image == "" ? require("../assets/no-image.jpg") : 'data:image/png;base64,' + res.data.Image
               })
+              .catch((e) => {
+                console.log(e.response)
+                value.Image = require("../assets/no-image.jpg")
+              })
           })
         })
     },

@@ -169,7 +169,8 @@ func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
 		Key:    aws.String(image + ".png"),
 	})
 	if err != nil {
-		fmt.Println(err)
+        fmt.Println(err)
+        rest.NotFound(w, r)
     }
     rc := obj.Body
     data, _ := ioutil.ReadAll(rc)
