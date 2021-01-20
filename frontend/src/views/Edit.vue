@@ -10,10 +10,11 @@
     <div>いまの画像</div>
     <img class="preview-image" :src="imageData">
   </div>
-  <div v-if="isUploaded">
+  <div v-if="isUploaded" class="new-image">
     <div>新しい画像</div>
+    <img class="cancel-image" src="../assets/cancel.png" @click="cancelImage">
     <img class="preview-image" :src="base64Image">
-    <button @click="cancelImage">この画像をキャンセル</button>
+    <!-- <button @click="cancelImage">この画像をキャンセル</button> -->
   </div>
     <button @click="update">編集する</button>
   </div>

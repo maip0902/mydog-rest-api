@@ -1,4 +1,18 @@
+.new-image {
+    position: relative;
+    width: 300px;
+    margin: 0 auto;
+}
+
 .preview-image {
     width: 300px;
     height: 300px;
+}
+
+.cancel-image {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    right: 5px;
+    cursor: pointer;
 }
