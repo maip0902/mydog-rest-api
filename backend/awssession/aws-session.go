@@ -13,7 +13,7 @@ func StartSession() (sess *session.Session, err error) {
     MyRegion := os.Getenv("AWS_REGION")
     sess, err = session.NewSession(
      &aws.Config{
-      Endpoint: aws.String("http://minio:9000"),
+      Endpoint: aws.String(os.Getenv("S3_ENDPOINT")),
       Region: aws.String(MyRegion),
       S3ForcePathStyle: aws.Bool(true),
       Credentials: credentials.NewStaticCredentials(

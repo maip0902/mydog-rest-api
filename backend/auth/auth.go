@@ -10,6 +10,7 @@ import (
     "sync"
     "fmt"
     "log"
+    "os"
     "golang.org/x/crypto/bcrypt"
     "github.com/dgrijalva/jwt-go"
     "time"
@@ -103,7 +104,7 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
 
 
 func CreateToken(user *models.User) (string, error) {
-    secret := "secret"
+    secret := os.Getenv("JWT_SECRET")
     token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
             "email": &user.Email,
             "iss":   "__init__", // JWT の発行者が入る(文字列(__init__)は任意)
