@@ -13,6 +13,8 @@ import (
     "strconv"
     "io/ioutil"
     "fmt"
+    "reflect"
+    "runtime"
     "os"
     "github.com/aws/aws-sdk-go/aws"
     "github.com/aws/aws-sdk-go/service/s3"
@@ -27,6 +29,18 @@ type CodeImage struct {
 
 type Image struct {
     Image string   `bson:"image"`
+}
+
+type UploadError struct {
+    Op string
+}
+
+func (e *UploadError) Error() string {
+    return fmt.Sprintf("%s", e.Op)
+}
+
+func GetFunctionName(i interface{}) string {
+    return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
 }
 
 // 読み込みと書き込みの競合解決
@@ -91,35 +105,18 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     err := r.DecodeJsonPayload(&codeImage)
 
     if err != nil {
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(UpdateImage), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
     }
 
     // 画像アップロードがあった時
     if(codeImage.Image != "") {
-        data, _ := base64.StdEncoding.DecodeString(codeImage.Image)
-        f, _ := os.Create("codeImage.png")
-        _, err = f.Write(data)
-        f, err = os.Open("codeImage.png")
-        
-        sess, err := awssession.StartSession()
-
-        uploader := s3manager.NewUploader(sess)
-        
-        up, err := uploader.Upload(&s3manager.UploadInput{
-            Bucket: aws.String("code-image"),
-            ACL:    aws.String("public-read"),
-            Key:    aws.String(strconv.Itoa(codeImage.Code) + ".png"),
-            Body:   f,
-        })
+        err = UploadImage(codeImage)
         if err != nil {
-            fmt.Println(err)
-            fmt.Println("アップロードエラー")
+            fmt.Printf("handle: %s action: %s\n", GetFunctionName(UploadImage), err.Error())
             rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
         }
-        fmt.Println(up)
         fields["image"] = strconv.Itoa(codeImage.Code) + ".png"
-        f.Close()
-        os.Remove("codeImage.png")
     }
     
     id := codeImage.ID
@@ -134,6 +131,41 @@ func UpdateImage (w rest.ResponseWriter, r *rest.Request) {
     
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
+}
+
+func UploadImage(c *CodeImage) error {
+    data, _ := base64.StdEncoding.DecodeString(c.Image)
+    f, _ := os.Create("codeImage.png")
+    _, err := f.Write(data)
+    if err != nil {
+        return &UploadError{Op: "write file data"}
+    }
+
+    f, err = os.Open("codeImage.png")
+    if err != nil {
+        return &UploadError{Op: "open file"}
+    }
+    
+    sess, err := awssession.StartSession()
+    if err != nil {
+        return &UploadError{Op: "connect s3"}
+    }
+
+    uploader := s3manager.NewUploader(sess)
+    
+    _, err = uploader.Upload(&s3manager.UploadInput{
+        Bucket: aws.String("code-image"),
+        ACL:    aws.String("public-read"),
+        Key:    aws.String(strconv.Itoa(c.Code) + ".png"),
+        Body:   f,
+    })
+    if err != nil {
+        return &UploadError{Op: "upload image s3"}
+    }
+    
+    f.Close()
+    os.Remove("codeImage.png")
+    return nil
 }
 
 func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
