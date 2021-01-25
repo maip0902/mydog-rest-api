@@ -17,6 +17,7 @@ import (
     "runtime"
     "os"
     "github.com/aws/aws-sdk-go/aws"
+    "github.com/aws/aws-sdk-go/aws/awserr"
     "github.com/aws/aws-sdk-go/service/s3"
     "github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
@@ -175,7 +176,10 @@ func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
     image := r.PathParam("code")
     
     sess, err := awssession.StartSession()
-    
+    if err != nil {
+        fmt.Errorf("aws error: %w", err)
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
     // ダウンロードする場合
     // f, err := os.Create(image + ".png")
 	// if err != nil {
@@ -204,7 +208,16 @@ func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
 		Key:    aws.String(image + ".png"),
 	})
 	if err != nil {
-        fmt.Println(err)
+        if aerr, ok := err.(awserr.Error); ok {
+            switch aerr.Code() {
+            case s3.ErrCodeNoSuchBucket:
+                fmt.Printf("bucket %s does not exist", os.Args[0])
+                rest.NotFound(w, r)
+            case s3.ErrCodeNoSuchKey:
+                fmt.Printf("object with key %s does not exist in bucket", os.Args[0])
+                rest.NotFound(w, r)
+            }
+        }    
         rest.NotFound(w, r)
     }
     rc := obj.Body
