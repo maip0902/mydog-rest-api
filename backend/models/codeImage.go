@@ -204,21 +204,24 @@ func GetStatusImage(w rest.ResponseWriter, r *rest.Request) {
     svc := s3.New(sess)
 
 	obj, err := svc.GetObject(&s3.GetObjectInput{
-		Bucket: aws.String("code-image"),
+		Bucket: aws.String(os.Getenv("S3_CODE_IMAGE_BUCKET_NAME")),
 		Key:    aws.String(image + ".png"),
 	})
 	if err != nil {
         if aerr, ok := err.(awserr.Error); ok {
             switch aerr.Code() {
             case s3.ErrCodeNoSuchBucket:
-                fmt.Printf("bucket %s does not exist", os.Args[0])
+                fmt.Printf("bucket %s does not exist", )
                 rest.NotFound(w, r)
+                return 
             case s3.ErrCodeNoSuchKey:
-                fmt.Printf("object with key %s does not exist in bucket", os.Args[0])
+                fmt.Printf("object with key %s does not exist in bucket %s\n", os.Getenv("S3_CODE_IMAGE_BUCKET_NAME"), image + ".png")
                 rest.NotFound(w, r)
+                return
             }
         }    
-        rest.NotFound(w, r)
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+        return 
     }
     rc := obj.Body
     data, _ := ioutil.ReadAll(rc)
