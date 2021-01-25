@@ -55,11 +55,12 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     var codeImage *CodeImage
     if err := db.C("codeImage").Find(bson.M{"code": code}).One(&codeImage); err != nil {
+        fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(GetImageByCode), err.Error())
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
-    fmt.Printf("%v", codeImage)
+
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
 }
@@ -72,11 +73,12 @@ func GetImageById (w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     var codeImage *CodeImage
     if err := db.C("codeImage").FindId(bson.ObjectIdHex(id)).One(&codeImage); err != nil {
+        fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(GetImageById), err.Error())
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
-    fmt.Printf("%v", codeImage)
+    
     // HttpResponseにjson文字列を出力
     w.WriteJson(codeImage)
 }
@@ -88,6 +90,7 @@ func GetAll (w rest.ResponseWriter, r *rest.Request) {
     // 読み込みlock RLock同士はブロックしない
     lock.RLock()
     if err := db.C("codeImage").Find(nil).All(&codeImages); err != nil {
+        fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(GetAll), err.Error())
         rest.NotFound(w, r)
         return
     }
