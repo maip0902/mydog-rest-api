@@ -11,9 +11,13 @@
         <button v-if="isAuthenticated" class="main-btn header-btn" @click="logout">
             Logout
         </button>
-        <ul class="header-nav">
+        <ul class="header-nav" v-if="!isAuthenticated">
           <li class="header-nav-itm"><router-link to="/">TOP</router-link></li>
           <li class="header-nav-itm"><router-link to="/test">TEST</router-link></li>
+          <li class="header-nav-itm">CONTACT</li>
+        </ul>
+        <ul class="header-nav" v-if="isAuthenticated">
+          <li class="header-nav-itm"><router-link to="/codeImages">TOP</router-link></li>
           <li class="header-nav-itm">CONTACT</li>
         </ul>
       </div>
