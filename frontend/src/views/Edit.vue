@@ -37,13 +37,13 @@ name: "Edit",
   },
   created() {
   console.log(this.$route.params.id)
-    axios.get('http://localhost/api/codeImage/' + this.$route.params.id)
+    axios.get('/api/codeImage/' + this.$route.params.id)
       .then((res) => {
         console.log(res.data)
         this.code = res.data.Code
         this.description = res.data.Description
         this.image = res.data.Image
-        axios.get('http://localhost/api/codeImage/image/' + this.code)
+        axios.get('/api/codeImage/image/' + this.code)
       .then((res) => {
         console.log(res.data)
         this.imageData = 'data:image/png;base64,' + res.data.Image
@@ -112,7 +112,7 @@ name: "Edit",
         image: this.fileInfo.replace(/^data:\w+\/\w+;base64,/, '')
       })
       console.log(params);
-      axios.post('http://localhost/api/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
+      axios.post('/api/codeImage/' + this.$route.params.id, params,{"headers": {"Content-Type": "application/json", "Accept": "application/json"}})
         .then((res) => {
           console.log(res)
         })

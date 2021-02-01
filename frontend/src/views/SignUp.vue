@@ -45,7 +45,7 @@ export default {
         password: this.password,
         email: this.email
       })
-      axios.post("http://localhost/api/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+      axios.post("/api/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           try {
             console.log(res.data.Token)

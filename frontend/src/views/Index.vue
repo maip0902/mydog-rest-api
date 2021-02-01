@@ -24,7 +24,7 @@ export default {
     let params = JSON.stringify({
       token: this.$session.get('jwt')
     })
-    axios.post("http://localhost/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+    axios.post("/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
       .then((res) => {
         console.log(this.$session.get('user'))
         this.$session.set('user', res.data)

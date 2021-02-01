@@ -25,10 +25,10 @@ export default {
   },
   methods: {
       get() {
-          axios.get("http://localhost/api/code/" + this.statusCode)
+          axios.get("/api/code/" + this.statusCode)
             .then((res) => {
                 this.description = res.data.Description
-                axios.get('http://localhost/api/codeImage/image/' + this.statusCode)
+                axios.get('/api/codeImage/image/' + this.statusCode)
                     .then((res) => {
                         this.image = res.data.Image == "" ? require("../assets/no-image.jpg") : 'data:image/png;base64,' + res.data.Image
                     })

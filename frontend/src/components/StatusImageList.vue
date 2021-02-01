@@ -36,11 +36,11 @@ export default {
   },
   methods: {
     getCode () {
-      axios.get('http://localhost/api/code')
+      axios.get('/api/code')
         .then(res => {
           this.codeImages = res.data
           this.codeImages.map((value) => {
-            axios.get('http://localhost/api/codeImage/image/' + String(value.Code))
+            axios.get('/api/codeImage/image/' + String(value.Code))
               .then((res) => {
                 value.Image = res.data.Image == "" ? require("../assets/no-image.jpg") : 'data:image/png;base64,' + res.data.Image
               })
