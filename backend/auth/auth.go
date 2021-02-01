@@ -115,12 +115,15 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     user := models.User{}
     err := r.DecodeJsonPayload(&user)
-    token := user.Token
-    fmt.Println(token)
-    err = db.C("users").Find(bson.M{"token": token}).One(&user)
-
     if err != nil {
-        fmt.Println(err)
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
+
+    token := user.Token
+    err = db.C("users").Find(bson.M{"token": token}).One(&user)
+    if err != nil {
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
         return
     }
