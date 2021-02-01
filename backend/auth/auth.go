@@ -9,6 +9,8 @@ import (
     "net/http"
     "sync"
     "fmt"
+    "reflect"
+    "runtime"
     "log"
     "os"
     "golang.org/x/crypto/bcrypt"
@@ -20,13 +22,24 @@ var db *mgo.Database
 
 var lock = sync.RWMutex{}
 
+var createTokenRetryMax = 3;
+
+func GetFunctionName(i interface{}) string {
+    return runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+}
+
 func SignUp(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     user := models.User{}
     err := r.DecodeJsonPayload(&user)
+
+    if err != nil {
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignUp), err.Error())
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
+
     err = user.CreateUserValidate()
     if err != nil {
-        fmt.Printf("%v", err)
         rest.Error(w, err.Error(), http.StatusBadRequest)
         return
     }
@@ -38,6 +51,11 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
 
+    if err != nil {
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignUp), err.Error())
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
+
     hashPass, err := bcrypt.GenerateFromPassword([]byte(user.Password),12)
     if err != nil {
         rest.Error(w, err.Error(), 500)
@@ -45,12 +63,19 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
 
-    token, err := CreateToken(&user)
-    if err != nil {
-        // ここは考えたい
-        rest.Error(w, err.Error(), http.StatusInternalServerError)
-        fmt.Println(err)
-        return
+    // token生成を3回までretry
+    var token string
+    for i := 0; i < createTokenRetryMax; i++ {
+        fmt.Printf("create token try:%s\n", i + 1)
+        token, err = CreateToken(&user)
+        if(err == nil) {
+            break
+        } 
+        if(err != nil && i == createTokenRetryMax - 1) {
+            rest.Error(w, err.Error(), http.StatusInternalServerError)
+            fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignUp), err.Error())
+            return
+        }
     }
 
     lock.RLock()
