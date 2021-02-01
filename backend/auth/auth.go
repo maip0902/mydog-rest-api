@@ -92,6 +92,11 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
     user := models.User{}
     err := r.DecodeJsonPayload(&user)
+    if err != nil {
+        fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignIn), err.Error())
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+    }
+
     password := user.Password
     email := user.Email
     err = db.C("users").Find(bson.M{"email": email}).One(&user)

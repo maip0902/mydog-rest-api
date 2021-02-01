@@ -52,6 +52,7 @@ export default {
             this.$session.start()
             this.$session.set('jwt', res.data.Token)
             this.$router.push("Top")
+            location.reload()
           } catch (e) {
             console.log(e)
           }

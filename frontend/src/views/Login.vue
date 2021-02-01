@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     login() {
-      console.log(this.email)
       let params = JSON.stringify({
         email: this.email,
         password: this.password
@@ -42,6 +41,7 @@ export default {
         .then( res => {
           this.$session.set('jwt', res.data.Token)
           this.$router.push("Top")
+          location.reload()
         })
         .catch((error) => {
           this.error = error.response.data.Error

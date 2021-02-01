@@ -38,6 +38,7 @@ export default {
   methods: {
     logout() {
         this.$session.destroy();
+        location.reload()
         this.$router.push('Login')
     }
   }
