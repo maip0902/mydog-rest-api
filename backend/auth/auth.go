@@ -126,6 +126,9 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     }
 
     token := user.Token
+    getToken, err := VerifyToken(token)
+    fmt.Println(getToken)
+    fmt.Println(err)
     err = db.C("users").Find(bson.M{"token": token}).One(&user)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
@@ -138,14 +141,32 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
 
 func CreateToken(user *models.User) (string, error) {
     secret := os.Getenv("JWT_SECRET")
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-            "email": &user.Email,
-            "iss":   "__init__", // JWT の発行者が入る(文字列(__init__)は任意)
-    })
+    // Create the Claims
+    // Create the Claims
+    claims := &jwt.StandardClaims{
+        ExpiresAt: time.Now().Add(30 * time.Minute).Unix(),
+        Issuer:    secret,
+    }
+    
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
     tokenString, err := token.SignedString([]byte(secret))
     if err != nil {
         log.Fatal(err)
     }
 
     return tokenString, nil
+}
+
+func VerifyToken(tokenString string) (*jwt.Token, error){
+    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+           return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+        }
+        return []byte(os.Getenv("JWT_SECRET")), nil
+     })
+     if err != nil {
+        return nil, err
+     }
+     claims, ok := token.Claims.(jwt.MapClaims)
+     return token, nil
 }
