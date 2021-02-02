@@ -50,4 +50,5 @@ export default {
 @import "../sass/top.scss";
 @import "../sass/login.scss";
 @import "../sass/edit.scss";
+@import "../sass/test.scss";
 </style>

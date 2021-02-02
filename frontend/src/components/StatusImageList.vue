@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>ステータスサンプル</h2>
+    <h2>ステータスコードレスポンス一覧</h2>
     <ul v-for="codeImage in codeImages" v-bind:key="codeImage.id" class="status-list">
       <li class="status-item">
         <img :src="codeImage.Image" class="status-image">
