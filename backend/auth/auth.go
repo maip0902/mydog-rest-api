@@ -66,13 +66,15 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         return
     }
 
+    id := bson.NewObjectId()
     lock.RLock()
-    if err := db.C("users").Insert(bson.M{"email": user.Email, "password": string(hashPass), "verified_at": time.Now()}); err != nil {
+    if err := db.C("users").Insert(bson.M{"_id": id, "email": user.Email, "password": string(hashPass), "verified_at": time.Now()}); err != nil {
         rest.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
     lock.RUnlock()
 
+    user.ID = id
     // token生成を3回までretry
     var token string
     for i := 0; i < createTokenRetryMax; i++ {
