@@ -35,6 +35,9 @@ name: "Edit",
       isUploaded: false
     }
   },
+  beforeCreate() {
+
+  },
   created() {
   console.log(this.$route.params.id)
     axios.get('/api/codeImage/' + this.$route.params.id)

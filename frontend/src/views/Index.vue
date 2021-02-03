@@ -32,7 +32,10 @@ export default {
         this.isAuthenticated = true
       })
       .catch((err) => {
-        console.log(err.response)
+        if(err.response.status === 401) {
+          this.$session.destroy()
+          this.$router.push('/login')
+        }
       })
   }
 }
