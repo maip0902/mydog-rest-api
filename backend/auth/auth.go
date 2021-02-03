@@ -144,28 +144,30 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
 
 func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     db = mongo.ConnectDB()
-    user := models.User{}
-    err := r.DecodeJsonPayload(&user)
+    token := Token{}
+    err := r.DecodeJsonPayload(&token)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
     }
 
-    token := user.Token
-    getToken, err := VerifyToken(token)
+    getToken, err := VerifyToken(token.Token)
     // token認証はどの原因のエラーでもログイン認証やり直させる
     if getToken == nil {
         fmt.Printf("handle: verifytoken error: %s\n", err.Error())
         rest.Error(w, "セッションの有効期限が切れました", 401)
         return
     }
-    err = db.C("users").Find(bson.M{"token": token}).One(&user)
+    claims, _ := getToken.Claims.(jwt.MapClaims)
+    id := claims["jti"].(string)
+    user := models.User{}
+    err = db.C("users").FindId(bson.ObjectIdHex(id)).One(&user)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
         return
     }
-    w.WriteJson(user)
+    w.WriteJson(&user)
 }
 
 

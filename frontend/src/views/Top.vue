@@ -17,7 +17,7 @@ name: "Top",
     let params = JSON.stringify({
       token: this.$session.get('jwt')
     })
-    axios.post("/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
+    axios.post("/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json', 'Authentication': this.$session.get('jwt')}})
       .then((res) => {
         console.log(res)
         this.$session.set('user', res.data)
