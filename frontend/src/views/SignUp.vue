@@ -48,7 +48,6 @@ export default {
       axios.post("/api/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           try {
-            console.log(res.data.Token)
             this.$session.start()
             this.$session.set('jwt', res.data.Token)
             this.$router.push("Top")

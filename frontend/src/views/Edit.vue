@@ -36,19 +36,26 @@ name: "Edit",
     }
   },
   beforeCreate() {
-
+    let params = JSON.stringify({
+      token: this.$session.get('jwt')
+    })
+    axios.post("/api/authUser", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json', 'Authentication': this.$session.get('jwt')}})
+      .then((res) => {
+        this.$session.set('user', res.data)
+      })
+      .catch((err) => {
+        this.$session.destroy()
+        this.$router.push('/login')
+    })
   },
   created() {
-  console.log(this.$route.params.id)
     axios.get('/api/codeImage/' + this.$route.params.id)
       .then((res) => {
-        console.log(res.data)
         this.code = res.data.Code
         this.description = res.data.Description
         this.image = res.data.Image
         axios.get('/api/codeImage/image/' + this.code)
       .then((res) => {
-        console.log(res.data)
         this.imageData = 'data:image/png;base64,' + res.data.Image
       })
       })    

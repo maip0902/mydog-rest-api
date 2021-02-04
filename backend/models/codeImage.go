@@ -68,7 +68,10 @@ func GetImageByCode (w rest.ResponseWriter, r *rest.Request) {
 
 func GetImageById (w rest.ResponseWriter, r *rest.Request) {
     id := r.PathParam("id")
-
+    isValidId := mongo.ValidateObjectId(id)
+    if(!isValidId) {
+        rest.NotFound(w, r)
+    }
     // 読み込みlock RLock同士はブロックしない
     lock.RLock()
     db = mongo.ConnectDB()
