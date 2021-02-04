@@ -2,21 +2,24 @@
   <div>
     <div>code : {{ code }}</div>
     <div>
-      Description <input type="textarea" v-model="description">
-      画像 <input id="image" type="file" @change="fileSelected" style="display:none">
-      <button @click="selectFile"> 画像を選択</button>
+      <div class="edit-input">
+        <label for="description" class="edit-label">Description</label>
+        <input id="description" type="textarea" class="edit-field" v-model="description">
+      </div>
+      <input id="image" type="file" @change="fileSelected" style="display:none">
+      <button @click="selectFile" class="main-btn">新しい画像を選択</button>
     </div>
-  <div>
-    <div>いまの画像</div>
-    <img class="preview-image" :src="imageData">
-  </div>
-  <div v-if="isUploaded" class="new-image">
-    <div>新しい画像</div>
-    <img class="cancel-image" src="../assets/cancel.png" @click="cancelImage">
-    <img class="preview-image" :src="base64Image">
-    <!-- <button @click="cancelImage">この画像をキャンセル</button> -->
-  </div>
-    <button @click="update">編集する</button>
+    <div>
+      <div>いまの画像</div>
+      <img class="preview-image" :src="imageData">
+    </div>
+    <div v-if="isUploaded" class="new-image">
+      <div>新しい画像</div>
+      <img class="cancel-image" src="../assets/cancel.png" @click="cancelImage">
+      <img class="preview-image" :src="base64Image">
+      <!-- <button @click="cancelImage">この画像をキャンセル</button> -->
+    </div>
+    <button @click="update" class="main-btn edit-btn">編集する</button>
   </div>
 </template>
 
