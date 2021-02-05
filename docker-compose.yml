@@ -73,3 +73,9 @@ services:
       - ./frontend:/frontend
     ports:
       - "8080:8080"
+  mail:
+    image: mailhog/mailhog:latest
+    container_name: mydog-api-mail
+    ports:
+      - "8025:8025"
+      - "1025:1025"

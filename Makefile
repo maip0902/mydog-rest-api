@@ -12,3 +12,5 @@ db:
 	docker exec -it mydog-api-mongo bash
 front:
 	docker exec -it mydog-api-front sh
+ps:
+	docker ps
