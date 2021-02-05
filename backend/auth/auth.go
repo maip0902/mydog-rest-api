@@ -99,7 +99,11 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
 
 func SignIn(w rest.ResponseWriter, r *rest.Request) {
     c, err := mail.ConnectSMTP()
-    fmt.Println(c)
+    c, err = mail.SendTemporaryRegisterMail(c, "aaa@test.com")
+    err = c.Quit()
+    if err != nil {
+        fmt.Println(err.Error())
+    }
     db = mongo.ConnectDB()
     user := models.User{}
     err = r.DecodeJsonPayload(&user)
