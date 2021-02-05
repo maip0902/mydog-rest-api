@@ -5,6 +5,7 @@ import (
     "github.com/globalsign/mgo"
     "github.com/maip0902/mydog-rest-api/mongo"
     "github.com/maip0902/mydog-rest-api/models"
+    "github.com/maip0902/mydog-rest-api/mail"
     "github.com/globalsign/mgo/bson"
     "net/http"
     "sync"
@@ -97,9 +98,11 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func SignIn(w rest.ResponseWriter, r *rest.Request) {
+    c, err := mail.ConnectSMTP()
+    fmt.Println(c)
     db = mongo.ConnectDB()
     user := models.User{}
-    err := r.DecodeJsonPayload(&user)
+    err = r.DecodeJsonPayload(&user)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignIn), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
