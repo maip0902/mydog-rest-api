@@ -14,9 +14,11 @@ func ConnectSMTP() (*smtp.Client, error) {
 }
 
 func SendTemporaryRegisterMail(c *smtp.Client, m string) (*smtp.Client, error) {
+	// 送信元
 	if err := c.Mail("sender@example.org"); err != nil {
 		fmt.Println(err.Error())
 	}
+	// 送信先
 	if err := c.Rcpt(m); err != nil {
 		fmt.Println(err.Error())
 	}
@@ -24,7 +26,13 @@ func SendTemporaryRegisterMail(c *smtp.Client, m string) (*smtp.Client, error) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	_, err = fmt.Fprintf(wc, "This is the email body")
+	// 本文１
+	_, err = fmt.Fprintf(wc, "仮登録完了のお知らせ\n")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	// 本文２
+	_, err = fmt.Fprintf(wc, "以下のリンクをタップすることで本登録完了となります")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
