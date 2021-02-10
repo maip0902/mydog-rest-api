@@ -37,6 +37,7 @@ func main() {
         rest.Get("/api/code", models.GetAll),
         rest.Post("/api/signUp", auth.SignUp),
         rest.Post("/api/signIn", auth.SignIn),
+        rest.Get("/api/email", auth.VerifyEmail),
         rest.Post("/api/authUser", auth.GetAuthenticatedUser),
     )
     if err != nil {

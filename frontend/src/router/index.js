@@ -8,6 +8,7 @@ import Top from "@/views/Top";
 import Index from "@/views/Index";
 import Edit from "@/views/Edit";
 import TemporaryRegistered from "@/views/TemporaryRegistered";
+import Registered from "@/views/Registered";
 
 Vue.use(VueRouter)
 
@@ -51,6 +52,11 @@ const routes = [
     path: '/email/sent',
     name: 'TemporaryRegistered',
     component: TemporaryRegistered
+  },
+  {
+    path: '/email',
+    name: 'Registered',
+    component: Registered
   }
 ]
 

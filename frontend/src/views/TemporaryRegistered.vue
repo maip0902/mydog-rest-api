@@ -1,7 +1,7 @@
 <template>
-  <div>
+<div>
     仮登録が完了しました
-  </div>
+</div>
 </template>
 
 <script>

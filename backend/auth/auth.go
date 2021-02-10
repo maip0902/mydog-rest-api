@@ -86,7 +86,7 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
         fmt.Println(err.Error())
     }
 
-    w.WriteJson(&Token{Token: token})
+    w.WriteJson(&user)
 }
 
 func SignIn(w rest.ResponseWriter, r *rest.Request) {
@@ -165,6 +165,28 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     w.WriteJson(&user)
 }
 
+func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
+    t := r.URL.Query().Get("verify_token")
+    fmt.Println(t)
+    db = mongo.ConnectDB()
+    var u *models.User
+    lock.RLock()
+    if err := db.C("users").Find(bson.M{"verify_token": t}).One(&u); err != nil {
+        fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(VerifyEmail), err.Error())
+        rest.NotFound(w, r)
+        return
+    }
+    lock.RUnlock()
+    id := u.ID
+    lock.RLock()
+    if err := db.C("users").UpdateId(id, bson.M{"verify_token": "", "verified_at": time.Now()}); err != nil {
+        fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(VerifyEmail), err.Error())
+        rest.NotFound(w, r)
+        return
+    }
+    lock.RUnlock()
+    w.WriteJson(&u)
+}
 
 func CreateToken(user *models.User) (string, error) {
     secret := os.Getenv("JWT_SECRET")
