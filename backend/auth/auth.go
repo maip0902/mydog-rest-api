@@ -166,6 +166,7 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
 }
 
 func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
+    // todo::既に認証メール送信していてtokenの有効期限内だったら送信できなくしたい
     t := r.URL.Query().Get("verify_token")
     fmt.Println(t)
     db = mongo.ConnectDB()
