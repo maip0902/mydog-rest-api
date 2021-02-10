@@ -178,6 +178,10 @@ func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
     }
     lock.RUnlock()
     id := u.ID
+    _, err := VerifyToken(t)
+    if err != nil {
+        rest.Error(w, "トークンの有効期限が切れました", http.StatusUnauthorized)
+    }
     lock.RLock()
     if err := db.C("users").UpdateId(id, bson.M{"verify_token": "", "verified_at": time.Now()}); err != nil {
         fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(VerifyEmail), err.Error())
@@ -210,7 +214,7 @@ func CreateEmailVerifyToken(user *models.User) (string, error) {
     secret := os.Getenv("JWT_SECRET")
     // Create the Claims
     claims := &jwt.StandardClaims{
-        ExpiresAt: time.Now().Add(60 * time.Minute).Unix(),
+        ExpiresAt: time.Now().Add(1 * time.Minute).Unix(),
         Issuer:    secret,
         Id: user.ID.Hex(),
     }
