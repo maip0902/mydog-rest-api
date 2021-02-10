@@ -48,9 +48,7 @@ export default {
       axios.post("/api/signUp", params, {headers: {'Content-Type': 'application/json','Accept': 'application/json'}})
         .then( res => {
           try {
-            this.$session.start()
-            this.$session.set('jwt', res.data.Token)
-            this.$router.push("Top")
+            this.$router.push("/email/sent")
             location.reload()
           } catch (e) {
             console.log(e)

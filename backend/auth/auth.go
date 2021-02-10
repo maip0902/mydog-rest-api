@@ -68,45 +68,31 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     }
 
     id := bson.NewObjectId()
+    user.ID = id
+    emailVerifyToken, err := CreateEmailVerifyToken(&user)
+    user.VerifyToken = emailVerifyToken
+    // ユーザー作成
     lock.RLock()
-    if err := db.C("users").Insert(bson.M{"_id": id, "email": user.Email, "password": string(hashPass), "verified_at": time.Now()}); err != nil {
+    if err := db.C("users").Insert(bson.M{"_id": user.ID, "email": user.Email, "password": string(hashPass), "verify_token": user.VerifyToken}); err != nil {
         rest.Error(w, err.Error(), http.StatusInternalServerError)
         return
     }
     lock.RUnlock()
-
-    user.ID = id
-    // token生成を3回までretry
-    var token string
-    for i := 0; i < createTokenRetryMax; i++ {
-        fmt.Printf("create token try:%s\n", i + 1)
-        token, err = CreateToken(&user)
-        if(err == nil) {
-            break
-        } 
-        if err != nil  {
-            fmt.Printf("handle: %s error: %s", GetFunctionName(CreateToken), err.Error())
-            if i == createTokenRetryMax - 1 {
-                rest.Error(w, err.Error(), http.StatusInternalServerError)
-                fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignUp), err.Error())
-                return
-            }
-        }
+    // 仮登録メールの送信
+    c, err := mail.ConnectSMTP()
+    c, err = mail.SendTemporaryRegisterMail(c, user.Email, user.VerifyToken)
+    err = c.Quit()
+    if err != nil {
+        fmt.Println(err.Error())
     }
 
     w.WriteJson(&Token{Token: token})
 }
 
 func SignIn(w rest.ResponseWriter, r *rest.Request) {
-    c, err := mail.ConnectSMTP()
-    c, err = mail.SendTemporaryRegisterMail(c, "aaa@test.com")
-    err = c.Quit()
-    if err != nil {
-        fmt.Println(err.Error())
-    }
     db = mongo.ConnectDB()
     user := models.User{}
-    err = r.DecodeJsonPayload(&user)
+    err := r.DecodeJsonPayload(&user)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignIn), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
@@ -157,7 +143,7 @@ func GetAuthenticatedUser(w rest.ResponseWriter, r *rest.Request) {
     err := r.DecodeJsonPayload(&token)
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(GetAuthenticatedUser), err.Error())
-        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+        rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError) 
     }
 
     getToken, err := VerifyToken(token.Token)
@@ -185,6 +171,24 @@ func CreateToken(user *models.User) (string, error) {
     // Create the Claims
     claims := &jwt.StandardClaims{
         ExpiresAt: time.Now().Add(30 * time.Minute).Unix(),
+        Issuer:    secret,
+        Id: user.ID.Hex(),
+    }
+    
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    tokenString, err := token.SignedString([]byte(secret))
+    if err != nil {
+        return "", err
+    }
+
+    return tokenString, nil
+}
+
+func CreateEmailVerifyToken(user *models.User) (string, error) {
+    secret := os.Getenv("JWT_SECRET")
+    // Create the Claims
+    claims := &jwt.StandardClaims{
+        ExpiresAt: time.Now().Add(60 * time.Minute).Unix(),
         Issuer:    secret,
         Id: user.ID.Hex(),
     }

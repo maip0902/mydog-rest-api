@@ -13,7 +13,7 @@ func ConnectSMTP() (*smtp.Client, error) {
 	return c, err
 }
 
-func SendTemporaryRegisterMail(c *smtp.Client, m string) (*smtp.Client, error) {
+func SendTemporaryRegisterMail(c *smtp.Client, m string, t string) (*smtp.Client, error) {
 	// 送信元
 	if err := c.Mail("sender@example.org"); err != nil {
 		fmt.Println(err.Error())
@@ -33,6 +33,11 @@ func SendTemporaryRegisterMail(c *smtp.Client, m string) (*smtp.Client, error) {
 	}
 	// 本文２
 	_, err = fmt.Fprintf(wc, "以下のリンクをタップすることで本登録完了となります")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	// 本文3
+	_, err = fmt.Fprintf(wc, "http://localhost/email?verify_token=" + t)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

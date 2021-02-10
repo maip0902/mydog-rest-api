@@ -15,6 +15,7 @@ type User struct {
     Password string      `bson:"password"`
     Token string         `bson:"token"`
     VerifiedAt time.Time `bson:"verified_at"`
+    VerifyToken string   `bson:"verify_token"`
 }
 
 // func (user *User) CreateUserValidate() error {
