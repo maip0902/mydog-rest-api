@@ -71,7 +71,7 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     user.ID = id
     emailVerifyToken, err := CreateEmailVerifyToken(&user)
     user.VerifyToken = emailVerifyToken
-    fmt.Println(user.Email)
+    
     // ユーザー作成
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"_id": user.ID, "email": user.Email, "password": string(hashPass), "verify_token": user.VerifyToken}); err != nil {
@@ -97,6 +97,7 @@ func SignIn(w rest.ResponseWriter, r *rest.Request) {
     if err != nil {
         fmt.Printf("handle: %s error: %s\n", GetFunctionName(SignIn), err.Error())
         rest.Error(w, "予期せぬエラーが発生しました", http.StatusInternalServerError)
+        return
     }
 
     password := user.Password
@@ -191,6 +192,7 @@ func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
     if err != nil {
         rest.Error(w, "トークンの有効期限が切れました", http.StatusUnauthorized)
     }
+
     fields := bson.M{}
     fields["verify_token"] = ""
     fields["verified_at"] = time.Now()
@@ -201,7 +203,7 @@ func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
-    fmt.Println(&u)
+    
     w.WriteJson(&u)
 }
 

@@ -1,7 +1,9 @@
 <template>
 <div>
   <div v-if="isSuccess">
-    本登録が完了しました
+    <h1>本登録完了</h1>
+    <p>本登録が完了しました。引き続きサービスをお楽しみくいださい。</p>
+    <button class="main-btn" @click="goTop">ログイン</button>
   </div>
   <div v-if="!isSuccess">
     本登録が完了できませんでした。再度登録をお願いします。
@@ -30,6 +32,11 @@ export default {
         console.log(e)
         this.isSuccess = false
       })
+  },
+  methods: {
+    goTop() {
+      this.$router.push('/login')
+    }
   }
 }
 </script>

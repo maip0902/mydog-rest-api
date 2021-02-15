@@ -32,7 +32,7 @@ func SendTemporaryRegisterMail(c *smtp.Client, m string, t string) (*smtp.Client
 		fmt.Println(err.Error())
 	}
 	// 本文２
-	_, err = fmt.Fprintf(wc, "以下のリンクをタップすることで本登録完了となります")
+	_, err = fmt.Fprintf(wc, "以下のリンクをタップすることで本登録完了となります\n")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
