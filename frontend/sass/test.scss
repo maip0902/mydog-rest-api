@@ -21,10 +21,11 @@
 .main-input
 {
     width: 150px;
-    height: 30px;
+    height: 26px;
     border-radius: 8px;
     border:3px solid #FFCCCC;
     outline: none;
+    padding: 4px;
 }
 
 .main-button 
@@ -33,7 +34,7 @@
     border-radius: 8px;
     border:3px solid #FF9966;
     background-color: #FF9966;
-    color: #FFFFFF
+    color: #FFFFFF;
 }
 
 .main-box 

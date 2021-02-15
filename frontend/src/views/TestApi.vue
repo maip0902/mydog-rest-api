@@ -1,6 +1,6 @@
 <template>
   <div class="main-content">
-      <input type="text" v-model="statusCode" class="main-input">
+      <input type="text" v-model="statusCode" placeholder="200" class="main-input">
       <button @click="get" class="main-button">Click!</button>
       <div class="box-image">
           <img :src="image" class="list-image"> 
