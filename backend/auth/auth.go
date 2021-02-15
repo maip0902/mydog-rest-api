@@ -71,6 +71,7 @@ func SignUp(w rest.ResponseWriter, r *rest.Request) {
     user.ID = id
     emailVerifyToken, err := CreateEmailVerifyToken(&user)
     user.VerifyToken = emailVerifyToken
+    fmt.Println(user.Email)
     // ユーザー作成
     lock.RLock()
     if err := db.C("users").Insert(bson.M{"_id": user.ID, "email": user.Email, "password": string(hashPass), "verify_token": user.VerifyToken}); err != nil {
@@ -170,7 +171,8 @@ func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
     t := r.URL.Query().Get("verify_token")
     fmt.Println(t)
     db = mongo.ConnectDB()
-    var u *models.User
+    var u *models.User 
+
     lock.RLock()
     if err := db.C("users").Find(bson.M{"verify_token": t}).One(&u); err != nil {
         fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(VerifyEmail), err.Error())
@@ -178,18 +180,28 @@ func VerifyEmail(w rest.ResponseWriter, r *rest.Request) {
         return
     }
     lock.RUnlock()
+
     id := u.ID
-    _, err := VerifyToken(t)
+    verify := make(chan error)
+    go func() { 
+        _, err := VerifyToken(t)
+        verify <- err
+    }()
+    err := <-verify
     if err != nil {
         rest.Error(w, "トークンの有効期限が切れました", http.StatusUnauthorized)
     }
+    fields := bson.M{}
+    fields["verify_token"] = ""
+    fields["verified_at"] = time.Now()
     lock.RLock()
-    if err := db.C("users").UpdateId(id, bson.M{"verify_token": "", "verified_at": time.Now()}); err != nil {
+    if err := db.C("users").UpdateId(id, bson.M{"$set": fields}); err != nil {
         fmt.Printf("handle: %s action: mongodb %s\n", GetFunctionName(VerifyEmail), err.Error())
         rest.NotFound(w, r)
         return
     }
     lock.RUnlock()
+    fmt.Println(&u)
     w.WriteJson(&u)
 }
 
@@ -215,7 +227,7 @@ func CreateEmailVerifyToken(user *models.User) (string, error) {
     secret := os.Getenv("JWT_SECRET")
     // Create the Claims
     claims := &jwt.StandardClaims{
-        ExpiresAt: time.Now().Add(1 * time.Minute).Unix(),
+        ExpiresAt: time.Now().Add(60 * time.Minute).Unix(),
         Issuer:    secret,
         Id: user.ID.Hex(),
     }
