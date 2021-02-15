@@ -3,10 +3,11 @@ package mail
 import (
 	"net/smtp"
 	"fmt"
+	"os"
 )
 
 func ConnectSMTP() (*smtp.Client, error) {
-	c, err := smtp.Dial("mail:1025")
+	c, err := smtp.Dial(os.Getenv("MAIL_HOST"))
 	if err != nil {
 		fmt.Printf("handle: connect smtp error: %s\n", err.Error())
 	}
@@ -15,7 +16,7 @@ func ConnectSMTP() (*smtp.Client, error) {
 
 func SendTemporaryRegisterMail(c *smtp.Client, m string, t string) (*smtp.Client, error) {
 	// 送信元
-	if err := c.Mail("sender@example.org"); err != nil {
+	if err := c.Mail(os.Getenv("MAIL_FROM")); err != nil {
 		fmt.Println(err.Error())
 	}
 	// 送信先
@@ -37,7 +38,7 @@ func SendTemporaryRegisterMail(c *smtp.Client, m string, t string) (*smtp.Client
 		fmt.Println(err.Error())
 	}
 	// 本文3
-	_, err = fmt.Fprintf(wc, "http://localhost/email?verify_token=" + t)
+	_, err = fmt.Fprintf(wc, os.Getenv("APP_URL") + "/email?verify_token=" + t)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
